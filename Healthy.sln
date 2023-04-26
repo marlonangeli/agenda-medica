@@ -1,0 +1,35 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{F4EFFC3E-148E-47F1-B7E7-491301D76692}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Healthy.Web", "src\Healthy.Web\Healthy.Web.csproj", "{1FA713DE-784C-4BC2-AABD-E68FEFC9B55D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Healthy.Domain", "src\Healthy.Domain\Healthy.Domain.csproj", "{12D84D7E-0193-4BC0-9657-C0D2298F586C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Healthy.Data", "src\Healthy.Data\Healthy.Data.csproj", "{E4C80921-DA8D-4F6A-AFEF-10F7A411B20C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{1FA713DE-784C-4BC2-AABD-E68FEFC9B55D} = {F4EFFC3E-148E-47F1-B7E7-491301D76692}
+		{12D84D7E-0193-4BC0-9657-C0D2298F586C} = {F4EFFC3E-148E-47F1-B7E7-491301D76692}
+		{E4C80921-DA8D-4F6A-AFEF-10F7A411B20C} = {F4EFFC3E-148E-47F1-B7E7-491301D76692}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1FA713DE-784C-4BC2-AABD-E68FEFC9B55D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1FA713DE-784C-4BC2-AABD-E68FEFC9B55D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1FA713DE-784C-4BC2-AABD-E68FEFC9B55D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1FA713DE-784C-4BC2-AABD-E68FEFC9B55D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{12D84D7E-0193-4BC0-9657-C0D2298F586C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12D84D7E-0193-4BC0-9657-C0D2298F586C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12D84D7E-0193-4BC0-9657-C0D2298F586C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12D84D7E-0193-4BC0-9657-C0D2298F586C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4C80921-DA8D-4F6A-AFEF-10F7A411B20C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4C80921-DA8D-4F6A-AFEF-10F7A411B20C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4C80921-DA8D-4F6A-AFEF-10F7A411B20C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4C80921-DA8D-4F6A-AFEF-10F7A411B20C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
