@@ -1,11 +1,13 @@
-﻿using System.Linq.Expressions;
+﻿using System.Collections;
+using System.Linq.Expressions;
 using Healthy.Data.Context;
+using Healthy.Domain.Entities;
 using Healthy.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Healthy.Data.Repositories;
 
-public class BaseRepository<T> : IBaseRepository<T> where T : class
+public class BaseRepository<T> : IBaseRepository<T> where T : class, IEntity
 {
     private readonly HealtyDbContext _context;
 
@@ -15,13 +17,13 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
     }
 
     public virtual async Task<(List<T> entities, int total)> GetAllAsync(int page, int pageSize,
-        Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, bool includeAll = false)
+        Expression<Func<T, object>>? orderBy = null, bool includeAll = false)
     {
         IQueryable<T> query = _context.Set<T>();
 
         if (orderBy != null)
         {
-            query = orderBy(query);
+            query = query.OrderBy(orderBy);
         }
         
         if (includeAll)
@@ -37,7 +39,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
     }
 
     public virtual async Task<(List<T> entities, int total)> GetAllAsync(Expression<Func<T, bool>>? filter, int page,
-        int pageSize, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, bool includeAll = false)
+        int pageSize, Expression<Func<T, object>> orderBy = null, bool includeAll = false)
     {
         IQueryable<T> query = _context.Set<T>();
 
@@ -48,7 +50,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
 
         if (orderBy != null)
         {
-            query = orderBy(query);
+            query = query.OrderBy(orderBy);
         }
         
         if (includeAll)
@@ -68,14 +70,16 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         return _context.Set<T>().AsQueryable();
     }
 
-    public virtual async Task<T?> GetByIdAsync(object? id, bool includeAll = false)
+    public virtual async Task<T?> GetByIdAsync(int id, bool includeAll = false)
     {
-        var entity = await _context.Set<T>().FindAsync(id);
+        var query = _context.Set<T>().AsQueryable();
+        if (includeAll)
+        {
+            IncludeAll(query);
+        }
+        var entity = await query.FirstOrDefaultAsync(x => x.Id == id);
         if (entity == null)
             throw new ArgumentException("Entity not found");
-        
-        if (includeAll)
-            IncludeAll(_context.Set<T>());
         
         return entity;
     }
@@ -94,9 +98,9 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         return entity;
     }
 
-    public virtual async Task<T> DeleteAsync(object id)
+    public virtual async Task<T> DeleteAsync(int id)
     {
-        var entity = await _context.Set<T>().FindAsync(id);
+        var entity = await GetByIdAsync(id);
         if (entity == null)
             throw new ArgumentException("Entity not found");
 
@@ -107,11 +111,11 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
 
     private void IncludeAll(IQueryable<T> query)
     {
-        var properties = typeof(T).GetProperties()
-            .Where(x => x.PropertyType.IsClass && x.PropertyType != typeof(string));
-        foreach (var property in properties)
-        {
-            query = query.Include(property.Name);
-        }
+        // TODO - Melhorar o include all
+        if (_context.Model.FindEntityType(typeof(T))?.GetDerivedTypesInclusive()
+                .SelectMany(type => type.GetNavigations())
+                .Distinct() is { } navigation) 
+            
+            navigation.Aggregate(query, (current, property) => current.Include(property.Name));
     }
 }

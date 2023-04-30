@@ -4,7 +4,7 @@ using Healthy.Domain.Validators;
 
 namespace Healthy.Domain.Entities;
 
-public class Person
+public class Person : IEntity
 {
     public int Id { get; set; }
 
