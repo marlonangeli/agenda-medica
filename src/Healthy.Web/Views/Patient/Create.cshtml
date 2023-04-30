@@ -1,0 +1,12 @@
+﻿@model Patient
+
+@{
+    ViewData["Title"] = "Criar Paciente";
+    Layout = "_Layout";
+}
+
+@await Html.PartialAsync("PatientFormPartial", (Model, "Create"))
+
+<div class="form-group">
+    <a asp-controller="Patient" asp-action="Index" class="btn btn-secondary">Voltar</a>
+</div>

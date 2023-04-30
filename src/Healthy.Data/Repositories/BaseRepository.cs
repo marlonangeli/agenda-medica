@@ -1,11 +1,13 @@
-﻿using System.Linq.Expressions;
+﻿using System.Collections;
+using System.Linq.Expressions;
 using Healthy.Data.Context;
+using Healthy.Domain.Entities;
 using Healthy.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Healthy.Data.Repositories;
 
-public class BaseRepository<T> : IBaseRepository<T> where T : class
+public class BaseRepository<T> : IBaseRepository<T> where T : class, IEntity
 {
     private readonly HealtyDbContext _context;
 
@@ -14,30 +16,35 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         _context = context;
     }
 
-    public virtual async Task<(List<T> entities, int total)> GetAllAsync(int page, int pageSize,
-        Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, bool includeAll = false)
+    public virtual async Task<(List<T> entities, int total)> GetAllAsync(int? page = null, int? pageSize = null,
+        Expression<Func<T, object>>? orderBy = null, bool includeAll = false)
     {
         IQueryable<T> query = _context.Set<T>();
 
         if (orderBy != null)
         {
-            query = orderBy(query);
+            query = query.OrderBy(orderBy);
         }
-        
+
         if (includeAll)
         {
-            IncludeAll(query);
+            IncludeAll(ref query);
         }
 
         var total = await query.CountAsync();
 
-        var entities = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+        List<T> entities;
+        if (page != null && pageSize != null)
+            entities = await query.Skip((int)((page - 1) * pageSize)).Take((int)pageSize).ToListAsync();
+        else
+            entities = await query.ToListAsync();
 
         return (entities, total);
     }
 
-    public virtual async Task<(List<T> entities, int total)> GetAllAsync(Expression<Func<T, bool>>? filter, int page,
-        int pageSize, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, bool includeAll = false)
+    public virtual async Task<(List<T> entities, int total)> GetAllAsync(Expression<Func<T, bool>>? filter = null,
+        int? page = null,
+        int? pageSize = null, Expression<Func<T, object>>? orderBy = null, bool includeAll = false)
     {
         IQueryable<T> query = _context.Set<T>();
 
@@ -48,17 +55,21 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
 
         if (orderBy != null)
         {
-            query = orderBy(query);
+            query = query.OrderBy(orderBy);
         }
-        
+
         if (includeAll)
         {
-            IncludeAll(query);
+            IncludeAll(ref query);
         }
 
         var total = await query.CountAsync();
 
-        var entities = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+        List<T> entities;
+        if (page != null && pageSize != null)
+            entities = await query.Skip((int)((page - 1) * pageSize)).Take((int)pageSize).ToListAsync();
+        else
+            entities = await query.ToListAsync();
 
         return (entities, total);
     }
@@ -68,15 +79,18 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         return _context.Set<T>().AsQueryable();
     }
 
-    public virtual async Task<T?> GetByIdAsync(object? id, bool includeAll = false)
+    public virtual async Task<T?> GetByIdAsync(int id, bool includeAll = false)
     {
-        var entity = await _context.Set<T>().FindAsync(id);
+        var query = _context.Set<T>().AsQueryable();
+        if (includeAll)
+        {
+            IncludeAll(ref query);
+        }
+
+        var entity = await query.FirstOrDefaultAsync(x => x.Id == id);
         if (entity == null)
             throw new ArgumentException("Entity not found");
-        
-        if (includeAll)
-            IncludeAll(_context.Set<T>());
-        
+
         return entity;
     }
 
@@ -94,9 +108,9 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         return entity;
     }
 
-    public virtual async Task<T> DeleteAsync(object id)
+    public virtual async Task<T> DeleteAsync(int id)
     {
-        var entity = await _context.Set<T>().FindAsync(id);
+        var entity = await GetByIdAsync(id);
         if (entity == null)
             throw new ArgumentException("Entity not found");
 
@@ -105,13 +119,10 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         return entity;
     }
 
-    private void IncludeAll(IQueryable<T> query)
+    private static void IncludeAll(ref IQueryable<T> query)
     {
-        var properties = typeof(T).GetProperties()
-            .Where(x => x.PropertyType.IsClass && x.PropertyType != typeof(string));
-        foreach (var property in properties)
-        {
-            query = query.Include(property.Name);
-        }
+        var properties = typeof(T).GetProperties();
+        query = properties.Where(property => property.PropertyType.GetInterfaces().Contains(typeof(IEntity)))
+            .Aggregate(query, (current, property) => current.Include(property.Name));
     }
 }

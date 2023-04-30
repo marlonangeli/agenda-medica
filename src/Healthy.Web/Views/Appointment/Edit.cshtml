@@ -1,0 +1,17 @@
+﻿@model Appointment?
+
+@{
+    ViewData["Title"] = "Editar Consulta";
+    Layout = "_Layout";
+}
+
+@if (Model is not null)
+{
+    @await Html.PartialAsync("AppointmentFormPartial", (Model, "Edit"))
+}
+else
+{
+    <div class="text-center">
+        <h3>Consulta não encontrada</h3>
+    </div>
+}

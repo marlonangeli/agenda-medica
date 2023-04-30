@@ -1,0 +1,112 @@
+﻿@model Healthy.Domain.Entities.Appointment?
+
+@{
+    ViewBag.Title = "Detalhes da Consulta";
+    Layout = "_Layout";
+}
+
+@if (Model is not null)
+{
+    <h3>Consulta #@Model.Id</h3>
+
+    <div class="form-group flex-column justify-content-end">
+        <a asp-controller="Appointment" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Editar</a>
+        <a asp-controller="Appointment" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Excluir</a>
+    </div>
+    <hr/>
+
+    <table class="table">
+        <tr>
+            <th>Data da consulta</th>
+            <td>@Model.Date</td>
+        </tr>
+        <tr>
+            <th>Descrição</th>
+            <td>@Model.Description</td>
+        </tr>
+        <tr>
+            <th>Valor</th>
+            <td>@Html.DisplayFor(model => model.Invoice)</td>
+        </tr>
+        <tr>
+            <th>Situação</th>
+            <td>@Model.Status</td>
+        </tr>
+        <tr>
+            <th>Criado em</th>
+            <td>@Model.CreatedAt</td>
+        </tr>
+    </table>
+
+    <hr/>
+
+    <div class="row">
+        <div class="col-md-6">
+            <h4>Paciente</h4>
+            <table class="table">
+                <tr>
+                    <th>Nome</th>
+                    <td>@Model.Patient.FullName</td>
+                </tr>
+                <tr>
+                    <th>CPF</th>
+                    <td>@Model.Patient.CPF</td>
+                </tr>
+                <tr>
+                    <th>Data de Nascimento</th>
+                    <td>@Model.Patient.BirthDate</td>
+                </tr>
+                <tr>
+                    <th>E-mail</th>
+                    <td>@Model.Patient.Email</td>
+                </tr>
+                <tr>
+                    <th>Telefone</th>
+                    <td>@Model.Patient.Phone</td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-md-6">
+            <h4>Médico</h4>
+            <table class="table">
+                <tr>
+                    <th>Nome</th>
+                    <td>@Model.Doctor.FullName</td>
+                </tr>
+                <tr>
+                    <th>CRM</th>
+                    <td>@Model.Doctor.CRM</td>
+                </tr>
+                <tr>
+                    <th>Especialidades</th>
+                    <td>
+                        <ul>
+                            @foreach (var specialty in Model.Doctor.Specialties)
+                            {
+                                <li>@specialty.Name</li>
+                            }
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <th>E-mail</th>
+                    <td>@Model.Doctor.Email</td>
+                </tr>
+                <tr>
+                    <th>Telefone</th>
+                    <td>@Model.Doctor.Phone</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+}
+else
+{
+    <div class="text-center">
+        <h3>Consulta não encontrada</h3>
+    </div>
+}
+
+<div class="form-group">
+    <a asp-controller="Appointment" asp-action="Index" class="btn btn-secondary">Voltar</a>
+</div>

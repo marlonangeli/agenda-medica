@@ -1,0 +1,21 @@
+﻿@model Patient?
+
+@{
+    ViewData["Title"] = "Editar Paciente";
+    Layout = "_Layout";
+}
+
+@if (Model is not null)
+{
+    @await Html.PartialAsync("PatientFormPartial", (Model, "Edit"))
+}
+else
+{
+    <div class="text-center">
+        <h3>Paciente não encontrado</h3>
+    </div>
+}
+
+<div class="form-group">
+    <a asp-controller="Patient" asp-action="Index" class="btn btn-secondary">Voltar</a>
+</div>

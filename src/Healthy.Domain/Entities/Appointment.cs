@@ -4,7 +4,7 @@ using Healthy.Domain.Validators;
 
 namespace Healthy.Domain.Entities;
 
-public class Appointment
+public class Appointment : IEntity
 {
     [Display(Name = "Código")] public int Id { get; set; }
 

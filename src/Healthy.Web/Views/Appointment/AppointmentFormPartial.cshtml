@@ -1,0 +1,69 @@
+﻿@using Healthy.Domain.Enums
+@using Microsoft.AspNetCore.Mvc.Rendering
+@model (Appointment Appointment, string Action);
+
+@{
+    string treatment = Model.Action == "Create" ? "Cadastrar" : "Editar";
+}
+
+<div class="flex justify-content-center align-content-center">
+
+    <h2>@treatment Consulta</h2>
+
+    @using (Html.BeginForm(Model.Action, "Appointment", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+            <hr/>
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Appointment.Date, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Appointment.Date, new { @class = "form-control datepicker", @data_val = "true", @data_val_validationappointmentdate = "Data de consulta inválida" })
+                    @Html.ValidationMessageFor(model => model.Appointment.Date, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Appointment.DoctorId, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(model => model.Appointment.DoctorId, ViewBag.Doctors as SelectList, "-- Selecione um médico --", new { @class = "form-control", required = "required" })
+                    @Html.ValidationMessageFor(model => model.Appointment.DoctorId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Appointment.PatientId, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(model => model.Appointment.PatientId, ViewBag.Patients as SelectList, "-- Selecione um paciente --", new { @class = "form-control", required = "required" })
+                    @Html.ValidationMessageFor(model => model.Appointment.PatientId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Appointment.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Appointment.Description, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Appointment.Description, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Appointment.Status, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(model => model.Appointment.Status, @Html.GetEnumSelectList<AppointmentStatus>(), new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Appointment.Status, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group mt-2">
+                <div class="col-md-offset-3 col-md-9">
+                    <button type="submit" class="btn btn-success">@treatment</button>
+                </div>
+            </div>
+        </div>
+    }
+
+</div>

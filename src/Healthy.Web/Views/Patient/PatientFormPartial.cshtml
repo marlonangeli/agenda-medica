@@ -1,0 +1,71 @@
+﻿@model (Patient Patient, string Action);
+
+@{
+    string treatment = Model.Action == "Create" ? "Cadastrar" : "Editar";
+}
+
+<div class="flex justify-content-center align-content-center">
+    
+    <h2>@treatment Paciente</h2>
+    
+    @using (Html.BeginForm(Model.Action, "Patient", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Patient.FirstName, new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.TextBoxFor(model => model.Patient.FirstName, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Patient.FirstName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Patient.LastName, new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.TextBoxFor(model => model.Patient.LastName, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Patient.LastName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Patient.CPF, new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.Patient.CPF, new { @class = "form-control cpf", @placeholder = "CPF", @data_mask = "999.999.999-99", @data_val = "true", @data_val_validationcpf = "CPF inválido" })
+                @Html.ValidationMessageFor(model => model.Patient.CPF, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Patient.BirthDate, new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.Patient.BirthDate, new { @class = "form-control datepicker", @data_val = "true", @data_val_validationbirthdate = "Data de nascimento inválida" })
+                @Html.ValidationMessageFor(model => model.Patient.BirthDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Patient.Email, new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.Patient.Email, new { @class = "form-control email" })
+                @Html.ValidationMessageFor(model => model.Patient.Email, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Patient.Phone, new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.Patient.Phone, new { @class = "form-control phone" })
+                @Html.ValidationMessageFor(model => model.Patient.Phone, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group mt-2">
+            <div class="col-md-offset-3 col-md-9">
+                <button type="submit" class="btn btn-success">@treatment</button>
+            </div>
+        </div>
+    }
+</div>
+
+@* TODO - Máscara CPF, e-mail e telefone *@

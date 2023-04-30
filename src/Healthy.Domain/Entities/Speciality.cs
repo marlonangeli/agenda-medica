@@ -2,7 +2,7 @@
 
 namespace Healthy.Domain.Entities;
 
-public class Speciality
+public class Speciality : IEntity
 {
     [Display(Name = "Código")]
     public int Id { get; set; }
