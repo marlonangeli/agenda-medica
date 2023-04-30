@@ -28,10 +28,7 @@ public class PatientController : Controller
 
     public async Task<IActionResult> Details(int id)
     {
-        var patient = await _repository.GetQueryable()
-            .Include(p => p.Appointments)
-            .ThenInclude(a => a.Doctor)
-            .FirstOrDefaultAsync(p => p.Id == id);
+        var patient = await _repository.GetByIdAsync(id, true);
 
         return View(patient);
     }
@@ -57,6 +54,7 @@ public class PatientController : Controller
     public async Task<IActionResult> Edit(int id)
     {
         var patient = await _repository.GetByIdAsync(id, true);
+        
         return View(patient);
     }
 

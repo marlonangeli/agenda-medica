@@ -27,15 +27,8 @@ public class AppointmentController : Controller
 
     public async Task<IActionResult> Index(int page = 1)
     {
-        // var (appointments, total) =
-        //     await _repository.GetAllAsync(page: page, pageSize: ViewConstants.PageSize, includeAll: true);
-        
-        var query = _repository.GetQueryable()
-            .Include(i => i.Patient)
-            .Include(i => i.Doctor);
-        var total = await query.CountAsync();
-        var appointments = await query.Skip((page - 1) * ViewConstants.PageSize).Take(ViewConstants.PageSize)
-            .ToListAsync();
+        var (appointments, total) =
+            await _repository.GetAllAsync(page: page, pageSize: ViewConstants.PageSize, includeAll: true);
 
         ViewBag.CurrentPage = page;
         ViewBag.TotalPages = (int)Math.Ceiling((double)total / ViewConstants.PageSize);

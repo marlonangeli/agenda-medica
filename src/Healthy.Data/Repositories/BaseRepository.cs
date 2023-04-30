@@ -25,10 +25,10 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class, IEntity
         {
             query = query.OrderBy(orderBy);
         }
-        
+
         if (includeAll)
         {
-            IncludeAll(query);
+            IncludeAll(ref query);
         }
 
         var total = await query.CountAsync();
@@ -39,7 +39,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class, IEntity
     }
 
     public virtual async Task<(List<T> entities, int total)> GetAllAsync(Expression<Func<T, bool>>? filter, int page,
-        int pageSize, Expression<Func<T, object>> orderBy = null, bool includeAll = false)
+        int pageSize, Expression<Func<T, object>>? orderBy = null, bool includeAll = false)
     {
         IQueryable<T> query = _context.Set<T>();
 
@@ -52,10 +52,10 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class, IEntity
         {
             query = query.OrderBy(orderBy);
         }
-        
+
         if (includeAll)
         {
-            IncludeAll(query);
+            IncludeAll(ref query);
         }
 
         var total = await query.CountAsync();
@@ -75,12 +75,13 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class, IEntity
         var query = _context.Set<T>().AsQueryable();
         if (includeAll)
         {
-            IncludeAll(query);
+            IncludeAll(ref query);
         }
+
         var entity = await query.FirstOrDefaultAsync(x => x.Id == id);
         if (entity == null)
             throw new ArgumentException("Entity not found");
-        
+
         return entity;
     }
 
@@ -109,13 +110,10 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class, IEntity
         return entity;
     }
 
-    private void IncludeAll(IQueryable<T> query)
+    private void IncludeAll(ref IQueryable<T> query)
     {
-        // TODO - Melhorar o include all
-        if (_context.Model.FindEntityType(typeof(T))?.GetDerivedTypesInclusive()
-                .SelectMany(type => type.GetNavigations())
-                .Distinct() is { } navigation) 
-            
-            navigation.Aggregate(query, (current, property) => current.Include(property.Name));
+        var properties = typeof(T).GetProperties();
+        query = properties.Where(property => property.PropertyType.GetInterfaces().Contains(typeof(IEntity)))
+            .Aggregate(query, (current, property) => current.Include(property.Name));
     }
 }
