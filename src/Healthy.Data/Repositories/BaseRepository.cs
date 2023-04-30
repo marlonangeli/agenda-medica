@@ -16,7 +16,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class, IEntity
         _context = context;
     }
 
-    public virtual async Task<(List<T> entities, int total)> GetAllAsync(int page, int pageSize,
+    public virtual async Task<(List<T> entities, int total)> GetAllAsync(int? page = null, int? pageSize = null,
         Expression<Func<T, object>>? orderBy = null, bool includeAll = false)
     {
         IQueryable<T> query = _context.Set<T>();
@@ -33,13 +33,18 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class, IEntity
 
         var total = await query.CountAsync();
 
-        var entities = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+        List<T> entities;
+        if (page != null && pageSize != null)
+            entities = await query.Skip((int)((page - 1) * pageSize)).Take((int)pageSize).ToListAsync();
+        else
+            entities = await query.ToListAsync();
 
         return (entities, total);
     }
 
-    public virtual async Task<(List<T> entities, int total)> GetAllAsync(Expression<Func<T, bool>>? filter, int page,
-        int pageSize, Expression<Func<T, object>>? orderBy = null, bool includeAll = false)
+    public virtual async Task<(List<T> entities, int total)> GetAllAsync(Expression<Func<T, bool>>? filter = null,
+        int? page = null,
+        int? pageSize = null, Expression<Func<T, object>>? orderBy = null, bool includeAll = false)
     {
         IQueryable<T> query = _context.Set<T>();
 
@@ -60,7 +65,11 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class, IEntity
 
         var total = await query.CountAsync();
 
-        var entities = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+        List<T> entities;
+        if (page != null && pageSize != null)
+            entities = await query.Skip((int)((page - 1) * pageSize)).Take((int)pageSize).ToListAsync();
+        else
+            entities = await query.ToListAsync();
 
         return (entities, total);
     }
@@ -110,7 +119,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class, IEntity
         return entity;
     }
 
-    private void IncludeAll(ref IQueryable<T> query)
+    private static void IncludeAll(ref IQueryable<T> query)
     {
         var properties = typeof(T).GetProperties();
         query = properties.Where(property => property.PropertyType.GetInterfaces().Contains(typeof(IEntity)))

@@ -4,11 +4,12 @@ namespace Healthy.Domain.Interfaces;
 
 public interface IBaseRepository<TEntity> where TEntity : class
 {
-    Task<(List<TEntity> entities, int total)> GetAllAsync(int page, int pageSize,
+    Task<(List<TEntity> entities, int total)> GetAllAsync(int? page = null, int? pageSize = null,
         Expression<Func<TEntity, object>>? orderBy = null, bool includeAll = false);
 
-    Task<(List<TEntity> entities, int total)> GetAllAsync(Expression<Func<TEntity, bool>>? filter, int page,
-        int pageSize,
+    Task<(List<TEntity> entities, int total)> GetAllAsync(Expression<Func<TEntity, bool>>? filter = null,
+        int? page = null,
+        int? pageSize = null,
         Expression<Func<TEntity, object>>? orderBy = null, bool includeAll = false);
 
     IQueryable<TEntity> GetQueryable();
