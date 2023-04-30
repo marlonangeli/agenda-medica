@@ -1,4 +1,6 @@
 using Healthy.Data.Context;
+using Healthy.Data.Repositories;
+using Healthy.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +10,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<HealtyDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("HealthyDb"))
         .EnableSensitiveDataLogging());
+builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 
 var app = builder.Build();
 
@@ -23,8 +26,6 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
-app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",

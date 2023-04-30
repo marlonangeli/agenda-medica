@@ -1,0 +1,50 @@
+﻿@model List<Appointment>
+
+@{
+    ViewBag.Title = "Consultas";
+    int currentPage = ViewBag.CurrentPage;
+    int totalPages = ViewBag.TotalPages;
+}
+
+@if (Model.Any())
+{
+    <div class="align-content-center">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Data</th>
+                <th>Descrição</th>
+                <th>Médico</th>
+                <th>Paciente</th>
+                <th>Status</th>
+                <th>Criado em</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (Appointment ap in Model)
+            {
+                <tr>
+                    <td>
+                        <a asp-controller="Appointment" asp-action="Details" asp-route-id="@ap.Id">@ap.Id</a>
+                    </td>
+                    <td>@ap.Date</td>
+                    <td>@ap.Description</td>
+                    <td>@ap.Doctor.FullName</td>
+                    <td>@ap.Patient.FullName</td>
+                    <td>@ap.Status</td>
+                    <td>@ap.CreatedAt</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+
+        @await Html.PartialAsync("_Pagination", (currentPage, totalPages, "Index"))
+    </div>
+}
+else
+{
+    <div class="text-center">
+        <h3>Nenhuma consulta encontrada</h3>
+    </div>
+}

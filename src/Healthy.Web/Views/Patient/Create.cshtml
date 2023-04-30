@@ -1,0 +1,10 @@
+﻿@model Patient
+
+@{
+    ViewBag.Title = "Criar Paciente";
+    Layout = "_Layout";
+}
+
+@await Html.PartialAsync("PatientFormPartial", (Model, "Create"))
+
+@* TODO - Máscara CPF, e-mail e telefone *@
