@@ -8,6 +8,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Healthy.Domain", "src\Healt
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Healthy.Data", "src\Healthy.Data\Healthy.Data.csproj", "{E4C80921-DA8D-4F6A-AFEF-10F7A411B20C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{9AC7FA47-2297-4555-962A-BF6EC9CC0093}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Healthy.Tests", "tests\Healthy.Tests\Healthy.Tests.csproj", "{424936BA-6889-4851-94BE-7F5419DFC07C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,6 +21,7 @@ Global
 		{1FA713DE-784C-4BC2-AABD-E68FEFC9B55D} = {F4EFFC3E-148E-47F1-B7E7-491301D76692}
 		{12D84D7E-0193-4BC0-9657-C0D2298F586C} = {F4EFFC3E-148E-47F1-B7E7-491301D76692}
 		{E4C80921-DA8D-4F6A-AFEF-10F7A411B20C} = {F4EFFC3E-148E-47F1-B7E7-491301D76692}
+		{424936BA-6889-4851-94BE-7F5419DFC07C} = {9AC7FA47-2297-4555-962A-BF6EC9CC0093}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{1FA713DE-784C-4BC2-AABD-E68FEFC9B55D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -31,5 +36,9 @@ Global
 		{E4C80921-DA8D-4F6A-AFEF-10F7A411B20C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E4C80921-DA8D-4F6A-AFEF-10F7A411B20C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E4C80921-DA8D-4F6A-AFEF-10F7A411B20C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{424936BA-6889-4851-94BE-7F5419DFC07C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{424936BA-6889-4851-94BE-7F5419DFC07C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{424936BA-6889-4851-94BE-7F5419DFC07C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{424936BA-6889-4851-94BE-7F5419DFC07C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
