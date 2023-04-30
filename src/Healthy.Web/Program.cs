@@ -1,7 +1,13 @@
+using Healthy.Data.Context;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddDbContext<HealtyDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("HealthyDb"))
+        .EnableSensitiveDataLogging());
 
 var app = builder.Build();
 
