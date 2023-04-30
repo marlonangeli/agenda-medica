@@ -9,7 +9,7 @@
 <h1>Pacientes</h1>
 
 <div class="flex justify-content-end">
-    <a class="btn btn-primary" href="@Url.Action("Create", "Patient")">Novo Paciente</a>
+    <a class="btn btn-primary" asp-controller="Patient" asp-action="Create">Novo Paciente</a>
 </div>
 
 @if (Model.Any())

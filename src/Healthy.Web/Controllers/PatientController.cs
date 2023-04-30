@@ -18,7 +18,7 @@ public class PatientController : Controller
     public async Task<IActionResult> Index(int page = 1)
     {
         var (patients, total) =
-            await _repository.GetAllAsync(page: page, pageSize: ViewConstants.PageSize, orderBy: p => p.FirstName);
+            await _repository.GetAllAsync(page, pageSize: ViewConstants.PageSize, orderBy: p => p.FirstName);
 
         ViewBag.CurrentPage = page;
         ViewBag.TotalPages = (int)Math.Ceiling((double)total / ViewConstants.PageSize);
@@ -28,7 +28,12 @@ public class PatientController : Controller
 
     public async Task<IActionResult> Details(int id)
     {
-        var patient = await _repository.GetByIdAsync(id, true);
+        // TODO - Implementar o IncludeAll
+        // var patient = await _repository.GetByIdAsync(id, true);
+        var patient = await _repository.GetQueryable()
+            .Include(i => i.Appointments)
+            .ThenInclude(i => i.Doctor)
+            .FirstOrDefaultAsync(f => f.Id == id);
 
         return View(patient);
     }
@@ -53,7 +58,7 @@ public class PatientController : Controller
 
     public async Task<IActionResult> Edit(int id)
     {
-        var patient = await _repository.GetByIdAsync(id, true);
+        var patient = await _repository.GetByIdAsync(id);
         
         return View(patient);
     }

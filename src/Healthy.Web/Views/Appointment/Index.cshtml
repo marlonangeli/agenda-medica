@@ -1,10 +1,16 @@
 ﻿@model List<Appointment>
 
 @{
-    ViewBag.Title = "Consultas";
+    ViewData["Title"] = "Consultas";
     int currentPage = ViewBag.CurrentPage;
     int totalPages = ViewBag.TotalPages;
 }
+
+<h1>Consultas</h1>
+
+<div class="flex justify-content-end">
+    <a class="btn btn-primary" asp-controller="Appointment" asp-action="Create">Nova Consulta</a>
+</div>
 
 @if (Model.Any())
 {

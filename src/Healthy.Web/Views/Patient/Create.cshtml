@@ -1,10 +1,12 @@
 ﻿@model Patient
 
 @{
-    ViewBag.Title = "Criar Paciente";
+    ViewData["Title"] = "Criar Paciente";
     Layout = "_Layout";
 }
 
 @await Html.PartialAsync("PatientFormPartial", (Model, "Create"))
 
-@* TODO - Máscara CPF, e-mail e telefone *@
+<div class="form-group">
+    <a asp-controller="Patient" asp-action="Index" class="btn btn-secondary">Voltar</a>
+</div>

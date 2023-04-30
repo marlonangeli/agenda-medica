@@ -1,0 +1,8 @@
+﻿@model Appointment
+
+@{
+    ViewData["Title"] = "Criar Consulta";
+    Layout = "_Layout";
+}
+
+@await Html.PartialAsync("AppointmentFormPartial", (Model, "Create"))

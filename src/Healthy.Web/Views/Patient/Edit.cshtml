@@ -1,7 +1,7 @@
 ﻿@model Patient?
 
 @{
-    ViewBag.Title = "Editar Paciente";
+    ViewData["Title"] = "Editar Paciente";
     Layout = "_Layout";
 }
 
@@ -16,11 +16,6 @@ else
     </div>
 }
 
-@section Scripts {
-    <script>
-        $(document).ready(function () {
-            $("#CPF").mask("999.999.999-99");
-            $("#Phone").mask("(99) 99999-9999");
-        });
-    </script>
-}
+<div class="form-group">
+    <a asp-controller="Patient" asp-action="Index" class="btn btn-secondary">Voltar</a>
+</div>
