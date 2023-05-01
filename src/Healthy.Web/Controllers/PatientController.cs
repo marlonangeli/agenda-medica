@@ -47,13 +47,21 @@ public class PatientController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(Patient patient)
     {
-        if (ModelState.IsValid)
+        try
         {
-            await _repository.AddAsync(patient);
-            return RedirectToAction(nameof(Index));
-        }
+            if (ModelState.IsValid)
+            {
+                await _repository.AddAsync(patient);
+                return RedirectToAction(nameof(Index));
+            }
 
-        return View(patient);
+            return View(patient);
+        }
+        catch (Exception e)
+        {
+            ModelState.AddModelError("", e.InnerException?.Message);
+            return View(patient);
+        }
     }
 
     public async Task<IActionResult> Edit(int id)
@@ -67,18 +75,26 @@ public class PatientController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(int id, Patient patient)
     {
-        if (id != patient.Id)
+        try
         {
-            return NotFound();
-        }
+            if (id != patient.Id)
+            {
+                return NotFound();
+            }
 
-        if (ModelState.IsValid)
+            if (ModelState.IsValid)
+            {
+                await _repository.UpdateAsync(patient);
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(patient);
+        }
+        catch (Exception e)
         {
-            await _repository.UpdateAsync(patient);
-            return RedirectToAction(nameof(Index));
+            ModelState.AddModelError("", e.Message);
+            return View(patient);
         }
-
-        return View(patient);
     }
 
     public async Task<IActionResult> Delete(int id)

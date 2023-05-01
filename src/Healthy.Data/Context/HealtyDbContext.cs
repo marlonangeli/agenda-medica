@@ -42,7 +42,7 @@ public class HealtyDbContext : DbContext
 
         modelBuilder
             .Entity<Doctor>()
-            .HasMany(d => d.Specialties)
+            .HasMany(d => d.Specialities)
             .WithMany(s => s.Doctors)
             .UsingEntity<DoctorSpeciality>(ds =>
                     ds.HasOne(d => d.Speciality)

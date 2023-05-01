@@ -25,7 +25,7 @@ public class AppointmentController : Controller
         var appointment = await _appointmentRepository.GetQueryable()
             .Include(i => i.Patient)
             .Include(i => i.Doctor)
-            .ThenInclude(d => d.Specialties)
+            .ThenInclude(d => d.Specialities)
             .FirstOrDefaultAsync(f => f.Id == id);
         
         return View(appointment);
