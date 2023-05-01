@@ -1,0 +1,79 @@
+﻿@model Speciality?
+
+@{
+    ViewData["Title"] = "Detalhes da Especialidade";
+    Layout = "_Layout";
+}
+
+@if (Model is not null)
+{
+    <div class="form-group flex-column justify-content-end">
+        <a asp-controller="Speciality" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Editar</a>
+        <a asp-controller="Speciality" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Excluir</a>
+    </div>
+    <hr/>
+
+    <table class="table">
+        <tr>
+            <th>Id</th>
+            <td>@Model.Id</td>
+        </tr>
+        <tr>
+            <th>Nome</th>
+            <td>@Model.Name</td>
+        </tr>
+    </table>
+
+    <hr/>
+
+    <h2>Médicos</h2>
+    
+    @if (Model.Doctors.Count > 0)
+    {
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nome</th>
+                <th>CRM</th>
+                <th>Data de nascimento</th>
+                <th>E-mail</th>
+                <th>Telefone</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var doctor in Model.Doctors)
+            {
+                <tr>
+                    <td>
+                        @* TODO - Mudar para símbolo de abrir *@
+                        <a asp-controller="Doctor" asp-action="Details" asp-route-id="@doctor.Id">@doctor.Id</a>
+                    </td>
+                    <td>@doctor.FullName</td>
+                    <td>@doctor.CRM</td>
+                    <td>@doctor.BirthDate.ToString("dd/MM/yyyy")</td>
+                    <td>@doctor.Email</td>
+                    <td>@doctor.Phone</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+        
+        @* TODO - Implementar paginação *@
+    }
+    else
+    {
+        <p>Não há médicos cadastrados para esta especialidade.</p>
+    }
+    <hr/>
+}
+else
+{
+    <div class="text-center">
+        <h3>Especialidade não encontrada</h3>
+    </div>
+}
+
+<div class="form-group mt-4">
+    <a asp-controller="Speciality" asp-action="Index" class="btn btn-secondary">Voltar</a>
+</div>

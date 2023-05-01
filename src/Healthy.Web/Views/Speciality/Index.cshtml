@@ -1,0 +1,46 @@
+﻿@model List<Speciality>
+
+@{
+    ViewData["Title"] = "Especialidades";
+    int currentPage = ViewBag.CurrentPage;
+    int totalPages = ViewBag.TotalPages;
+}
+
+<h1>Especialidades</h1>
+
+<div class="flex justify-content-end">
+    <a class="btn btn-primary" asp-controller="Speciality" asp-action="Create">Nova especialidade</a>
+</div>
+
+@if (Model.Any())
+{
+    <div class="align-content-center">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nome</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (Speciality speciality in Model)
+            {
+                <tr>
+                    <td>@speciality.Id</td>
+                    <td>
+                        <a asp-controller="Speciality" asp-action="Details" asp-route-id="@speciality.Id">@speciality.Name</a>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+
+        @await Html.PartialAsync("_Pagination", (currentPage, totalPages, "Index"))
+    </div>
+}
+else
+{
+    <div class="text-center">
+        <h3>Nenhuma especialidade encontrada</h3>
+    </div>
+}

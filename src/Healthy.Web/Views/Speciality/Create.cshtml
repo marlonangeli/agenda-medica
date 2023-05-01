@@ -1,0 +1,12 @@
+﻿@model Speciality
+
+@{
+    ViewData["Title"] = "Criar Especialidade";
+    Layout = "_Layout";
+}
+
+@await Html.PartialAsync("SpecialityFormPartial")
+
+<div class="form-group mt-4">
+    <a asp-controller="Speciality" asp-action="Index" class="btn btn-secondary">Voltar</a>
+</div>
