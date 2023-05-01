@@ -1,0 +1,56 @@
+﻿@model List<Doctor>
+
+@{
+    ViewData["Title"] = "Médicos";
+    int currentPage = ViewBag.CurrentPage;
+    int totalPages = ViewBag.TotalPages;
+}
+
+<h1>Doutor</h1>
+
+<div class="flex justify-content-end">
+    <a class="btn btn-primary" asp-controller="Doctor" asp-action="Create">Novo Médico</a>
+</div>
+
+@if (Model.Any())
+{
+    <div class="align-content-center">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nome</th>
+                <th>CPF</th>
+                <th>Telefone</th>
+                <th>E-mail</th>
+                <th>Idade</th>
+                <th>Data de Nascimento</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (Doctor doctor in Model)
+            {
+                <tr>
+                    <td>@doctor.Id</td>
+                    <td>
+                        <a asp-controller="Doctor" asp-action="Details" asp-route-id="@doctor.Id">@doctor.FullName</a>
+                    </td>
+                    <td>@doctor.CRM</td>
+                    <td>@doctor.Phone</td>
+                    <td>@doctor.Email</td>
+                    <td>@doctor.Age</td>
+                    <td>@doctor.BirthDate.ToString("dd/MM/yyyy")</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+
+        @await Html.PartialAsync("_Pagination", (currentPage, totalPages, "Index"))
+    </div>
+}
+else
+{
+    <div class="text-center">
+        <h3>Nenhum médico encontrado</h3>
+    </div>
+}

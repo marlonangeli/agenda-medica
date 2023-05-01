@@ -6,7 +6,8 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews()
+    .AddViewOptions(options => options.HtmlHelperOptions.ClientValidationEnabled = true);
 builder.Services.AddDbContext<HealtyDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("HealthyDb"))
         .EnableSensitiveDataLogging());

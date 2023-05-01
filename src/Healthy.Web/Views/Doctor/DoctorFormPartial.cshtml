@@ -1,4 +1,4 @@
-﻿@model Patient
+﻿@model Doctor
 
 @{
     string action = ViewBag.Action ?? "Create";
@@ -7,13 +7,13 @@
 
 <div class="flex justify-content-center align-content-center">
     
-    <h2>@treatment Paciente</h2>
+    <h2>@treatment Médico</h2>
     
-    @using (Html.BeginForm(action, "Patient", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    @using (Html.BeginForm(action, "Doctor", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
     {
         <hr/>
-        @Html.AntiForgeryToken()
         @Html.ValidationSummary("", new { @class = "text-danger" })
+        @Html.AntiForgeryToken()
 
         <div class="form-group">
             @Html.LabelFor(model => model.FirstName, new { @class = "control-label col-md-3" })
@@ -32,12 +32,20 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.CPF, new { @class = "control-label col-md-3" })
+            @Html.LabelFor(model => model.CRM, new { @class = "control-label col-md-3" })
             <div class="col-md-9">
-                @Html.TextBoxFor(model => model.CPF, new { @class = "form-control cpf", @placeholder = "CPF", @data_mask = "999.999.999-99", @data_val = "true", @data_val_validationcpf = "CPF inválido" })
-                @Html.ValidationMessageFor(model => model.CPF, "", new { @class = "text-danger" })
+                @Html.TextBoxFor(model => model.CRM, new { @class = "form-control crm", @placeholder = "CRM", @data_val = "true", @data_val_validationcrn = "CRM inválido" })
+                @Html.ValidationMessageFor(model => model.CRM, "", new { @class = "text-danger" })
             </div>
         </div>
+        
+        @* <div class="form-group"> *@
+        @*     @Html.LabelFor(model => model.Specialities, new { @class = "control-label col-md-3" }) *@
+        @*     <div class="col-md-9"> *@
+        @*         @Html.ListBoxFor(model => model.Specialities, new SelectList(ViewBag.Specialities as SelectList, nameof(Speciality.Id), nameof(Speciality.Name)), new { @class = "form-control specialities", @multiple = "multiple" }) *@
+        @*         @Html.ValidationMessageFor(model => model.Specialities, "", new { @class = "text-danger" }) *@
+        @*     </div> *@
+        @* </div> *@
 
         <div class="form-group">
             @Html.LabelFor(model => model.BirthDate, new { @class = "control-label col-md-3" })
@@ -73,4 +81,4 @@
 
 @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 
-@* TODO - Máscara CPF, e-mail e telefone *@
+@* TODO - Máscara CRM, e-mail e telefone *@

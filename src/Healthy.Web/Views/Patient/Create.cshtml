@@ -5,8 +5,8 @@
     Layout = "_Layout";
 }
 
-@await Html.PartialAsync("PatientFormPartial", (Model, "Create"))
+@await Html.PartialAsync("PatientFormPartial")
 
-<div class="form-group">
+<div class="form-group mt-4">
     <a asp-controller="Patient" asp-action="Index" class="btn btn-secondary">Voltar</a>
 </div>

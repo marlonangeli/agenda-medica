@@ -1,7 +1,7 @@
-﻿@model Patient?
+﻿@model Doctor?
 
 @{
-    ViewData["Title"] = "Detalhes do Paciente";
+    ViewData["Title"] = "Detalhes do Médico";
     Layout = "_Layout";
 }
 
@@ -10,15 +10,15 @@
     <h1>@Model.FullName</h1>
 
     <div class="form-group flex-column justify-content-end">
-        <a asp-controller="Patient" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Editar</a>
-        <a asp-controller="Patient" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Excluir</a>
+        <a asp-controller="Doctor" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Editar</a>
+        <a asp-controller="Doctor" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Excluir</a>
     </div>
     <hr/>
 
     <table class="table">
         <tr>
-            <th>CPF</th>
-            <td>@Model.CPF</td>
+            <th>CRM</th>
+            <td>@Model.CRM</td>
         </tr>
         <tr>
             <th>Data de Nascimento</th>
@@ -32,12 +32,23 @@
             <th>Telefone</th>
             <td>@Model.Phone</td>
         </tr>
+        <tr>
+            <th>Especialidades</th>
+            <td>
+                <ul>
+                    @foreach (var specialty in Model.Specialities)
+                    {
+                        <li>@specialty.Name</li>
+                    }
+                </ul>
+            </td>
+        </tr>
     </table>
 
     <hr/>
 
     <h2>Consultas</h2>
-    
+
     @if (Model.Appointments.Count > 0)
     {
         <table class="table">
@@ -45,7 +56,7 @@
             <tr>
                 <th>Link</th>
                 <th>Data</th>
-                <th>Médico</th>
+                <th>Paciente</th>
                 <th>Descrição</th>
                 <th>Status</th>
             </tr>
@@ -59,7 +70,7 @@
                         <a asp-controller="Appointment" asp-action="Details" asp-route-id="@appointment.Id">@appointment.Id</a>
                     </td>
                     <td>@appointment.Date.ToString("dd/MM/yyyy")</td>
-                    <td>@appointment.Doctor.FullName</td>
+                    <td>@appointment.Patient.FullName</td>
                     <td>@appointment.Description</td>
                     <td>@appointment.Status</td>
                     @* TODO - Melhorar exibição do Status *@
@@ -67,7 +78,7 @@
             }
             </tbody>
         </table>
-        
+
         @* TODO - Implementar paginação *@
     }
     else
