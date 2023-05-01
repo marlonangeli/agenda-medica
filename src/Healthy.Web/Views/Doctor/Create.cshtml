@@ -1,11 +1,11 @@
-﻿@model Doctor
+﻿@model DoctorViewModel
 
 @{
     ViewData["Title"] = "Criar Médico";
     Layout = "_Layout";
 }
 
-@await Html.PartialAsync("DoctorFormPartial")
+@await Html.PartialAsync("DoctorFormPartial", Model)
 
 <div class="form-group mt-4">
     <a asp-controller="Doctor" asp-action="Index" class="btn btn-secondary">Voltar</a>

@@ -1,6 +1,8 @@
 ﻿using Healthy.Domain.Entities;
 using Healthy.Domain.Interfaces;
 using Healthy.Web.Constants;
+using Healthy.Web.Helpers;
+using Healthy.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -52,8 +54,10 @@ public class DoctorController : Controller
     {
         var doctor = await _doctorRepository.GetByIdAsync(id);
         PopulateSpecialties();
+        
+        var doctorViewModel = doctor.Map();
 
-        return View(doctor);
+        return View(doctorViewModel);
     }
 
     public IActionResult Create()
@@ -64,13 +68,14 @@ public class DoctorController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(Doctor doctor)
+    public async Task<IActionResult> Create(DoctorViewModel doctor)
     {
         RemoveModelStateProperties();
 
         if (ModelState.IsValid)
         {
-            await _doctorRepository.AddAsync(doctor);
+            var doctorEntity = doctor.Map();
+            await _doctorRepository.AddAsync(doctorEntity);
             return RedirectToAction(nameof(Index));
         }
 
@@ -82,7 +87,7 @@ public class DoctorController : Controller
     private async void PopulateSpecialties()
     {
         var (specialties, _) = await _specialtyRepository.GetAllAsync(1, orderBy: s => s.Name);
-        ViewBag.Specialities = new SelectList(specialties, nameof(Speciality.Id), nameof(Speciality.Name));
+        ViewBag.Specialities = new MultiSelectList(specialties, nameof(Speciality.Id), nameof(Speciality.Name));
     }
 
     private void RemoveModelStateProperties()

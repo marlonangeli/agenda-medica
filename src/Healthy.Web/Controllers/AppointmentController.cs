@@ -98,6 +98,8 @@ public class AppointmentController : Controller
             await _appointmentRepository.UpdateAsync(appointment);
             return RedirectToAction(nameof(Index));
         }
+        
+        PopulateDropDownLists();
 
         return View(appointment);
     }
