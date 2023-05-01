@@ -1,0 +1,84 @@
+﻿@model Doctor
+
+@{
+    string action = ViewBag.Action ?? "Create";
+    string treatment = action == "Create" ? "Cadastrar" : "Editar";
+}
+
+<div class="flex justify-content-center align-content-center">
+    
+    <h2>@treatment Médico</h2>
+    
+    @using (Html.BeginForm(action, "Doctor", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        <hr/>
+        @Html.ValidationSummary("", new { @class = "text-danger" })
+        @Html.AntiForgeryToken()
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.FirstName, new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.TextBoxFor(model => model.FirstName, new { @class = "form-control", @data_val = "true" })
+                @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.LastName, new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.TextBoxFor(model => model.LastName, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CRM, new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.TextBoxFor(model => model.CRM, new { @class = "form-control crm", @placeholder = "CRM", @data_val = "true", @data_val_validationcrn = "CRM inválido" })
+                @Html.ValidationMessageFor(model => model.CRM, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        
+        @* <div class="form-group"> *@
+        @*     @Html.LabelFor(model => model.Specialities, new { @class = "control-label col-md-3" }) *@
+        @*     <div class="col-md-9"> *@
+        @*         @Html.ListBoxFor(model => model.Specialities, new SelectList(ViewBag.Specialities as SelectList, nameof(Speciality.Id), nameof(Speciality.Name)), new { @class = "form-control specialities", @multiple = "multiple" }) *@
+        @*         @Html.ValidationMessageFor(model => model.Specialities, "", new { @class = "text-danger" }) *@
+        @*     </div> *@
+        @* </div> *@
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.BirthDate, new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.BirthDate, new { @class = "form-control datepicker", @data_val = "true", @data_val_validationbirthdate = "Data de nascimento inválida" })
+                @Html.ValidationMessageFor(model => model.BirthDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Email, new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.TextBoxFor(model => model.Email, new { @class = "form-control email" })
+                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Phone, new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @Html.TextBoxFor(model => model.Phone, new { @class = "form-control phone" })
+                @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group mt-2">
+            <div class="col-md-offset-3 col-md-9">
+                <button type="submit" class="btn btn-success">@treatment</button>
+            </div>
+        </div>
+    }
+</div>
+
+@{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+
+@* TODO - Máscara CRM, e-mail e telefone *@
