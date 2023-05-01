@@ -3,11 +3,12 @@
 @{
     ViewData["Title"] = "Editar Paciente";
     Layout = "_Layout";
+    ViewBag.Action = "Edit";
 }
 
 @if (Model is not null)
 {
-    @await Html.PartialAsync("PatientFormPartial", (Model, "Edit"))
+    @await Html.PartialAsync("PatientFormPartial")
 }
 else
 {

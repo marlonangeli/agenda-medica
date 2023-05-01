@@ -1,62 +1,64 @@
-﻿@model (Patient Patient, string Action);
+﻿@model Patient
 
 @{
-    string treatment = Model.Action == "Create" ? "Cadastrar" : "Editar";
+    string action = ViewBag.Action ?? "Create";
+    string treatment = action == "Create" ? "Cadastrar" : "Editar";
 }
 
 <div class="flex justify-content-center align-content-center">
     
     <h2>@treatment Paciente</h2>
     
-    @using (Html.BeginForm(Model.Action, "Patient", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    @using (Html.BeginForm(action, "Patient", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
     {
+        @Html.ValidationSummary("", new { @class = "text-danger" })
         @Html.AntiForgeryToken()
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Patient.FirstName, new { @class = "control-label col-md-3" })
+            @Html.LabelFor(model => model.FirstName, new { @class = "control-label col-md-3" })
             <div class="col-md-9">
-                @Html.TextBoxFor(model => model.Patient.FirstName, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.Patient.FirstName, "", new { @class = "text-danger" })
+                @Html.TextBoxFor(model => model.FirstName, new { @class = "form-control", @data_val = "true" })
+                @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Patient.LastName, new { @class = "control-label col-md-3" })
+            @Html.LabelFor(model => model.LastName, new { @class = "control-label col-md-3" })
             <div class="col-md-9">
-                @Html.TextBoxFor(model => model.Patient.LastName, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.Patient.LastName, "", new { @class = "text-danger" })
+                @Html.TextBoxFor(model => model.LastName, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Patient.CPF, new { @class = "control-label col-md-3" })
+            @Html.LabelFor(model => model.CPF, new { @class = "control-label col-md-3" })
             <div class="col-md-9">
-                @Html.EditorFor(model => model.Patient.CPF, new { @class = "form-control cpf", @placeholder = "CPF", @data_mask = "999.999.999-99", @data_val = "true", @data_val_validationcpf = "CPF inválido" })
-                @Html.ValidationMessageFor(model => model.Patient.CPF, "", new { @class = "text-danger" })
+                @Html.TextBoxFor(model => model.CPF, new { @class = "form-control cpf", @placeholder = "CPF", @data_mask = "999.999.999-99", @data_val = "true", @data_val_validationcpf = "CPF inválido" })
+                @Html.ValidationMessageFor(model => model.CPF, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Patient.BirthDate, new { @class = "control-label col-md-3" })
+            @Html.LabelFor(model => model.BirthDate, new { @class = "control-label col-md-3" })
             <div class="col-md-9">
-                @Html.EditorFor(model => model.Patient.BirthDate, new { @class = "form-control datepicker", @data_val = "true", @data_val_validationbirthdate = "Data de nascimento inválida" })
-                @Html.ValidationMessageFor(model => model.Patient.BirthDate, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.BirthDate, new { @class = "form-control datepicker", @data_val = "true", @data_val_validationbirthdate = "Data de nascimento inválida" })
+                @Html.ValidationMessageFor(model => model.BirthDate, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Patient.Email, new { @class = "control-label col-md-3" })
+            @Html.LabelFor(model => model.Email, new { @class = "control-label col-md-3" })
             <div class="col-md-9">
-                @Html.EditorFor(model => model.Patient.Email, new { @class = "form-control email" })
-                @Html.ValidationMessageFor(model => model.Patient.Email, "", new { @class = "text-danger" })
+                @Html.TextBoxFor(model => model.Email, new { @class = "form-control email" })
+                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Patient.Phone, new { @class = "control-label col-md-3" })
+            @Html.LabelFor(model => model.Phone, new { @class = "control-label col-md-3" })
             <div class="col-md-9">
-                @Html.EditorFor(model => model.Patient.Phone, new { @class = "form-control phone" })
-                @Html.ValidationMessageFor(model => model.Patient.Phone, "", new { @class = "text-danger" })
+                @Html.TextBoxFor(model => model.Phone, new { @class = "form-control phone" })
+                @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
             </div>
         </div>
 
@@ -67,5 +69,7 @@
         </div>
     }
 </div>
+
+@{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 
 @* TODO - Máscara CPF, e-mail e telefone *@

@@ -44,14 +44,7 @@ public class AppointmentController : Controller
 
     public async Task<IActionResult> Create()
     {
-        var (patients, _) = await _patientRepository.GetAllAsync(1);
-        var (doctors, _) = await _doctorRepository.GetAllAsync(1);
-
-        var selectListPatients = new SelectList(patients, nameof(Patient.Id), nameof(Patient.FullName));
-        var selectListDoctors = new SelectList(doctors, nameof(Doctor.Id), nameof(Doctor.FullName));
-        
-        ViewBag.Patients = selectListPatients;
-        ViewBag.Doctors = selectListDoctors;
+        PopulateDropDownLists();
 
         return View();
     }
@@ -60,11 +53,15 @@ public class AppointmentController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(Appointment appointment)
     {
+        RemoveModelStateProperties();
+        
         if (ModelState.IsValid)
         {
             var entity = await _appointmentRepository.AddAsync(appointment);
             return RedirectToAction(nameof(Details), new { id = entity.Id });
         }
+        
+        PopulateDropDownLists();
         
         return View(appointment);
     }
@@ -72,6 +69,16 @@ public class AppointmentController : Controller
     public async Task<IActionResult> Edit(int id)
     {
         var appointment = await _appointmentRepository.GetByIdAsync(id, true);
+        
+        var (patients, _) = await _patientRepository.GetAllAsync(1);
+        var (doctors, _) = await _doctorRepository.GetAllAsync(1);
+
+        var selectListPatients = new SelectList(patients, nameof(Patient.Id), nameof(Patient.FullName));
+        var selectListDoctors = new SelectList(doctors, nameof(Doctor.Id), nameof(Doctor.FullName));
+        
+        ViewBag.Patients = selectListPatients;
+        ViewBag.Doctors = selectListDoctors;
+        
         return View(appointment);
     }
 
@@ -79,6 +86,8 @@ public class AppointmentController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(int id, Appointment appointment)
     {
+        RemoveModelStateProperties();
+
         if (id != appointment.Id)
         {
             return NotFound();
@@ -95,7 +104,25 @@ public class AppointmentController : Controller
 
     public async Task<IActionResult> Delete(int id)
     {
-        await _appointmentRepository.GetByIdAsync(id);
+        await _appointmentRepository.DeleteAsync(id);
         return RedirectToAction(nameof(Index));
+    }
+    
+    private async void PopulateDropDownLists()
+    {
+        var (patients, _) = await _patientRepository.GetAllAsync(1);
+        var (doctors, _) = await _doctorRepository.GetAllAsync(1);
+
+        var selectListPatients = new SelectList(patients, nameof(Patient.Id), nameof(Patient.FullName));
+        var selectListDoctors = new SelectList(doctors, nameof(Doctor.Id), nameof(Doctor.FullName));
+        
+        ViewBag.Patients = selectListPatients;
+        ViewBag.Doctors = selectListDoctors;
+    }
+    
+    private void RemoveModelStateProperties()
+    {
+        ModelState.Remove(nameof(Appointment.Patient));
+        ModelState.Remove(nameof(Appointment.Doctor));
     }
 }

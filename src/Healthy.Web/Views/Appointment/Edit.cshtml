@@ -3,11 +3,12 @@
 @{
     ViewData["Title"] = "Editar Consulta";
     Layout = "_Layout";
+    ViewBag.Action = "Edit";
 }
 
 @if (Model is not null)
 {
-    @await Html.PartialAsync("AppointmentFormPartial", (Model, "Edit"))
+    @await Html.PartialAsync("AppointmentFormPartial")
 }
 else
 {
@@ -15,3 +16,7 @@ else
         <h3>Consulta não encontrada</h3>
     </div>
 }
+
+<div class="form-group mt-4">
+    <a asp-controller="Patient" asp-action="Index" class="btn btn-secondary">Voltar</a>
+</div>
