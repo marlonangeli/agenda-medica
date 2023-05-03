@@ -1,4 +1,5 @@
 ﻿using Healthy.Domain.Entities;
+using Healthy.Domain.Enums;
 using Healthy.Domain.Interfaces;
 using Healthy.Web.Constants;
 using Microsoft.AspNetCore.Mvc;
@@ -126,5 +127,41 @@ public class AppointmentController : Controller
     {
         ModelState.Remove(nameof(Appointment.Patient));
         ModelState.Remove(nameof(Appointment.Doctor));
+    }
+
+    
+    public async Task<JsonResult> getCalendarData()
+    {
+        var query = _appointmentRepository.GetQueryable().Include(i => i.Patient).Include(i => i.Doctor);
+        var total = await query.CountAsync();
+        var appointments = await query
+            .Skip((1 - 1) * ViewConstants.PageSize)
+            .Take(ViewConstants.PageSize)
+            .ToListAsync();
+        var events = new List<object>();
+
+        foreach (var appointment in appointments)
+        {
+            if (appointment != null)
+            {
+                events.Add(
+                    new
+                    {
+                        title = $"Consulta {appointment.Id} - {appointment.Patient.FirstName}",
+                        start = appointment.Date.ToString("yyyy-MM-ddTHH:mm:ss"),
+                        end = appointment.Date.AddMinutes(30).ToString("yyyy-MM-ddTHH:mm:ss"),
+                        url = $"/Appointment/Details/{appointment.Id}",
+                        backgroundColor = appointment.Status switch
+                        {
+                            AppointmentStatus.Canceled => "#f44336",
+                            AppointmentStatus.Completed => "#4caf50",
+                            _ => "#2196f3"
+                        }
+                    }
+                );
+            }
+        }
+
+        return Json(events);
     }
 }

@@ -13,90 +13,159 @@
         <a asp-controller="Appointment" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Editar</a>
         <a asp-controller="Appointment" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Excluir</a>
     </div>
-    <hr/>
+    <hr />
 
-    <table class="table">
-        <tr>
-            <th>Data da consulta</th>
-            <td>@Model.Date</td>
-        </tr>
-        <tr>
-            <th>Descrição</th>
-            <td>@Model.Description</td>
-        </tr>
-        <tr>
-            <th>Valor</th>
-            <td>@Html.DisplayFor(model => model.Invoice)</td>
-        </tr>
-        <tr>
-            <th>Situação</th>
-            <td>@Model.Status</td>
-        </tr>
-        <tr>
-            <th>Criado em</th>
-            <td>@Model.CreatedAt</td>
-        </tr>
-    </table>
-
-    <hr/>
-
+    <div class="card mb-3">
+        <div class="card-header bg-primary text-light">
+            <h5 class="mb-0">Detalhes da consulta</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-4">
+                    <strong>Data da consulta:</strong>
+                </div>
+                <div class="col-sm-8">
+                    @Model.Date
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <strong>Descrição:</strong>
+                </div>
+                <div class="col-sm-8">
+                    @Model.Description
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <strong>Valor:</strong>
+                </div>
+                <div class="col-sm-8">
+                    @Html.DisplayFor(model => model.Invoice)
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <strong>Situação:</strong>
+                </div>
+                <div class="col-sm-8">
+                    @Html.DisplayFor(model => model.Status)
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <strong>Criado em:</strong>
+                </div>
+                <div class="col-sm-8">
+                    @Model.CreatedAt
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr />
     <div class="row">
         <div class="col-md-6">
-            <h4>Paciente</h4>
-            <table class="table">
-                <tr>
-                    <th>Nome</th>
-                    <td>@Model.Patient.FullName</td>
-                </tr>
-                <tr>
-                    <th>CPF</th>
-                    <td>@Model.Patient.CPF</td>
-                </tr>
-                <tr>
-                    <th>Data de Nascimento</th>
-                    <td>@Model.Patient.BirthDate</td>
-                </tr>
-                <tr>
-                    <th>E-mail</th>
-                    <td>@Model.Patient.Email</td>
-                </tr>
-                <tr>
-                    <th>Telefone</th>
-                    <td>@Model.Patient.Phone</td>
-                </tr>
-            </table>
+            <div class="card mb-3">
+                <div class="card-header bg-primary text-light">
+                    <h5 class="mb-0">Paciente</h5>
+                </div>
+                <div class="card-body" style="height: 170px; overflow-y: auto;">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <strong>Nome:</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            @Model.Patient.FullName
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <strong>CPF:</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            @Model.Patient.CPF
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <strong>Data de Nascimento:</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            @Model.Patient.BirthDate
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <strong>E-mail:</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            @Model.Patient.Email
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <strong>Telefone:</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            @Model.Patient.Phone
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="col-md-6">
-            <h4>Médico</h4>
-            <table class="table">
-                <tr>
-                    <th>Nome</th>
-                    <td>@Model.Doctor.FullName</td>
-                </tr>
-                <tr>
-                    <th>CRM</th>
-                    <td>@Model.Doctor.CRM</td>
-                </tr>
-                <tr>
-                    <th>Especialidades</th>
-                    <td>
-                        <ul>
-                            @foreach (var specialty in Model.Doctor.Specialities)
-                            {
-                                <li>@specialty.Name</li>
-                            }
-                        </ul>
-                    </td>
-                </tr>
-                <tr>
-                    <th>E-mail</th>
-                    <td>@Model.Doctor.Email</td>
-                </tr>
-                <tr>
-                    <th>Telefone</th>
-                    <td>@Model.Doctor.Phone</td>
-                </tr>
-            </table>
+            <div class="card mb-3">
+                <div class="card-header bg-primary text-light">
+                    <h5 class="mb-0">Médico</h5>
+                </div>
+                <div class="card-body" style="height: 170px; overflow-y: auto;">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <strong>Nome:</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            @Model.Doctor.FullName
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <strong>CRM:</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            @Model.Doctor.CRM
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <strong>Especialidades:</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            <ul>
+                                @foreach (var specialty in Model.Doctor.Specialities)
+                                {
+                                    <li>@specialty.Name</li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <strong>E-mail:</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            @Model.Doctor.Email
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <strong>Telefone:</strong>
+                        </div>
+                        <div class="col-sm-8">
+                            @Model.Doctor.Phone
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 }

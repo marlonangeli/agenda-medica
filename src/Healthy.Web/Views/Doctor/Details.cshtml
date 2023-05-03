@@ -5,6 +5,10 @@
     Layout = "_Layout";
 }
 
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+</head>
+
 @if (Model is not null)
 {
     <h1>@Model.FullName</h1>
@@ -13,79 +17,106 @@
         <a asp-controller="Doctor" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Editar</a>
         <a asp-controller="Doctor" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Excluir</a>
     </div>
-    <hr/>
+    <hr />
 
-    <table class="table">
-        <tr>
-            <th>CRM</th>
-            <td>@Model.CRM</td>
-        </tr>
-        <tr>
-            <th>Data de Nascimento</th>
-            <td>@Model.BirthDate.ToString("dd/MM/yyyy")</td>
-        </tr>
-        <tr>
-            <th>E-mail</th>
-            <td>@Model.Email</td>
-        </tr>
-        <tr>
-            <th>Telefone</th>
-            <td>@Model.Phone</td>
-        </tr>
-        <tr>
-            <th>Especialidades</th>
-            <td>
-                <ul>
-                    @foreach (var specialty in Model.Specialities)
-                    {
-                        <li>@specialty.Name</li>
-                    }
-                </ul>
-            </td>
-        </tr>
-    </table>
+    <div class="card mb-3">
+        <div class="card-header bg-primary text-light">
+            <h5 class="mb-0">Detalhes do Médico</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-4">
+                    <strong>CRM:</strong>
+                </div>
+                <div class="col-sm-8">
+                    @Model.CRM
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <strong>Data de Nascimento:</strong>
+                </div>
+                <div class="col-sm-8">
+                    @Model.BirthDate.ToString("dd/MM/yyyy")
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <strong>E-mail:</strong>
+                </div>
+                <div class="col-sm-8">
+                    @Model.Email
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <strong>Telefone:</strong>
+                </div>
+                <div class="col-sm-8">
+                    @Model.Phone
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <strong>Especialidades:</strong>
+                </div>
+                <div class="col-sm-8">
+                    <ul>
+                        @foreach (var specialty in Model.Specialities)
+                        {
+                            <li>@specialty.Name</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr />
 
-    <hr/>
-
-    <h2>Consultas</h2>
-
-    @if (Model.Appointments.Count > 0)
-    {
-        <table class="table">
-            <thead>
-            <tr>
-                <th>Link</th>
-                <th>Data</th>
-                <th>Paciente</th>
-                <th>Descrição</th>
-                <th>Status</th>
-            </tr>
-            </thead>
-            <tbody>
-            @foreach (var appointment in Model.Appointments)
+    <div class="card mb-3">
+        <div class="card-header bg-primary text-light">
+            <h5 class="mb-0">Consultas</h5>
+        </div>
+        <div class="card-body">
+            @if (Model.Appointments.Count > 0)
             {
-                <tr>
-                    <td>
-                        @* TODO - Mudar para símbolo de abrir *@
-                        <a asp-controller="Appointment" asp-action="Details" asp-route-id="@appointment.Id">@appointment.Id</a>
-                    </td>
-                    <td>@appointment.Date.ToString("dd/MM/yyyy")</td>
-                    <td>@appointment.Patient.FullName</td>
-                    <td>@appointment.Description</td>
-                    <td>@appointment.Status</td>
-                    @* TODO - Melhorar exibição do Status *@
-                </tr>
-            }
-            </tbody>
-        </table>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Link</th>
+                            <th>Data</th>
+                            <th>Paciente</th>
+                            <th>Descrição</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var appointment in Model.Appointments)
+                        {
+                            <tr>
+                                <td>
+                                    <a asp-controller="Appointment" asp-action="Details" asp-route-id="@appointment.Id"> <i
+                                            class="fa fa-eye" aria-hidden="true"></i></a>
+                                </td>
+                                <td>@appointment.Date.ToString("dd/MM/yyyy")</td>
+                                <td>@appointment.Patient.FullName</td>
+                                <td>@appointment.Description</td>
+                                <td> @Html.DisplayFor(model => appointment.Status)</td>
+                                @* TODO - Melhorar exibição do Status *@
+                            </tr>
+                        }
+                    </tbody>
+                </table>
 
-        @* TODO - Implementar paginação *@
-    }
-    else
-    {
-        <p>Não há consultas cadastradas para este paciente.</p>
-    }
-    <hr/>
+                @* TODO - Implementar paginação *@
+            }
+            else
+            {
+                <p>Não há consultas cadastradas para este paciente.</p>
+            }
+        </div>
+    </div>
+    <hr />
 }
 else
 {

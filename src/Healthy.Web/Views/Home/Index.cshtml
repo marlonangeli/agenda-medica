@@ -1,8 +1,161 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@using Healthy.Domain.Enums
+@model List<Appointment>
+@{
+    ViewData["Title"] = "Página Inicial";
+    var scheduledCount = Model?.Count(a => a.Status == AppointmentStatus.Scheduled) ?? 0;
+    var confirmedCount = Model?.Count(a => a.Status == AppointmentStatus.Confirmed) ?? 0;
+    var canceledCount = Model?.Count(a => a.Status == AppointmentStatus.Canceled) ?? 0;
+    var completedCount = Model?.Count(a => a.Status == AppointmentStatus.Completed) ?? 0;
+    var doctorCounts = Model?
+    .GroupBy(a => a.Doctor.FirstName + ' ' + a.Doctor.LastName)
+    .Select(g => new
+    {
+        DoctorName = g.Key,
+        AppointmentCount = g.Count()
+    })
+    .ToList();
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<head>
+    <meta charset='utf-8' />
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.6/index.global.min.js'></script>
+    <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.6/main.min.css' />
+</head>
+
+<style>
+    #calendar {
+        margin-top: -10px;
+    }
+
+    .table-container {
+        margin-top: 20px;
+        padding-left: 20px;
+    }
+
+    .table-title {
+        font-size: 1.2rem;
+        font-weight: bold;
+        text-align: center;
+    }
+</style>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title">Agenda</h3>
+                        <div id="calendar"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-12 mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h3 class="card-title">Status das Consultas</h3>
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <td>Agendada</td>
+                                            <td>@scheduledCount</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Confirmada</td>
+                                            <td>@confirmedCount</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Cancelada</td>
+                                            <td>@canceledCount</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Completa</td>
+                                            <td>@completedCount</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h3 class="card-title">Número de Consultas por Médico</h3>
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Médico</th>
+                                            <th>Número de Consultas</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in doctorCounts)
+                                        {
+                                            <tr>
+                                                <td>@item.DoctorName</td>
+                                                <td>@item.AppointmentCount</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+@section scripts {
+    <link href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.0/fullcalendar.min.css' rel='stylesheet' />
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/pt-br.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.0/fullcalendar.min.js'></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#calendar').fullCalendar({
+                events: '@Url.Action("getCalendarData", "Appointment")',
+                locale: 'pt-br',
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,agendaWeek,agendaDay'
+                },
+                allDayText: '24 horas',
+                footer: {
+                    right: 'prevYear,nextYear'
+                },
+                eventRender: function (event, element) {
+                    element.addClass('event-' + event.category);
+                },
+                editable: true,
+                buttonText: {
+                    today: "Hoje",
+                    month: "Mês",
+                    week: "Semana",
+                    day: "Dia"
+                }
+            });
+        });
+    </script>
+}
+
+<style>
+    .card {
+        box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.2);
+    }
+
+    .card-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 1.5rem;
+    }
+
+    .table td {
+        vertical-align: middle;
+    }
+</style>
