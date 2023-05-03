@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Especialidades";
+    Layout = "_Layout";
     int currentPage = ViewBag.CurrentPage;
     int totalPages = ViewBag.TotalPages;
 }
@@ -9,7 +10,7 @@
 <h1>Especialidades</h1>
 
 <div class="flex justify-content-end">
-    <a class="btn btn-primary" asp-controller="Speciality" asp-action="Create">Nova especialidade</a>
+    <a class="btn btn-primary btn-sm" asp-controller="Speciality" asp-action="Create">Nova Especialidade</a>
 </div>
 
 @if (Model.Any())

@@ -11,6 +11,7 @@ public static class MapperHelper
         return new Doctor
         {
             Id = doctor.Id,
+            CRM = doctor.CRM,
             FirstName = doctor.FirstName,
             LastName = doctor.LastName,
             BirthDate = doctor.BirthDate,
@@ -27,6 +28,7 @@ public static class MapperHelper
         return new DoctorViewModel
         {
             Id = doctor.Id,
+            CRM = doctor.CRM,
             FirstName = doctor.FirstName,
             LastName = doctor.LastName,
             BirthDate = doctor.BirthDate,

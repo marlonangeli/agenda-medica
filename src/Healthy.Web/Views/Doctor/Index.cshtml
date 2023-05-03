@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Médicos";
+    Layout = "_Layout";
     int currentPage = ViewBag.CurrentPage;
     int totalPages = ViewBag.TotalPages;
 }
@@ -57,10 +58,3 @@ else
         <h3>Nenhum médico encontrado</h3>
     </div>
 }
-
-<style>
-    a.btn.btn-primary.btn-sm {
-        font-size: 1.0rem;
-        padding: 0.7rem 0.5rem;
-    }
-</style>

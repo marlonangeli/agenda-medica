@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Paciente";
+    Layout = "_Layout";
     int currentPage = ViewBag.CurrentPage;
     int totalPages = ViewBag.TotalPages;
 }
@@ -11,11 +12,11 @@
         <h1>Pacientes</h1>
         <a class="btn btn-primary btn-sm" asp-controller="Patient" asp-action="Create">Novo Paciente</a>
     </div>
-@if (Model.Any())
-{
-    <div class="table-responsive">
-        <table class="table table-striped">
-            <thead>
+    @if (Model.Any())
+    {
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
                 <tr>
                     <th>ID</th>
                     <th>Nome</th>
@@ -26,8 +27,8 @@
                     <th>Data de Nascimento</th>
                     <th>Ações</th>
                 </tr>
-            </thead>
-            <tbody>
+                </thead>
+                <tbody>
                 @foreach (var patient in Model)
                 {
                     <tr>
@@ -39,27 +40,23 @@
                         <td>@patient.Age</td>
                         <td>@patient.BirthDate.ToString("dd/MM/yyyy")</td>
                         <td>
-<a class="btn btn-sm btn-secondary" asp-controller="Patient" asp-action="Details"
-                        asp-route-id="@patient.Id">Detalhes</a>
+                            <a class="btn btn-sm btn-secondary" asp-controller="Patient" asp-action="Details"
+                               asp-route-id="@patient.Id">
+                                Detalhes
+                            </a>
                         </td>
                     </tr>
                 }
-            </tbody>
-        </table>
-    </div>
+                </tbody>
+            </table>
+        </div>
 
-    @await Html.PartialAsync("_Pagination", (currentPage, totalPages, "Index"))
-}
-else
-{
-    <div class="text-center">
-        <h3>Nenhum paciente encontrado</h3>
-    </div>
-}
-
-<style>
-    a.btn.btn-primary.btn-sm {
-        font-size: 1.0rem;
-        padding: 0.7rem 0.5rem;
+        @await Html.PartialAsync("_Pagination", (currentPage, totalPages, "Index"))
     }
-</style>
+    else
+    {
+        <div class="text-center">
+            <h3>Nenhum paciente encontrado</h3>
+        </div>
+    }
+</div>

@@ -2,159 +2,65 @@
 <html lang="pt-br">
 
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@ViewData["Title"] - Healthy</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Healthy.Web.styles.css" asp-append-version="true" />
-    <icon src="~/favicon.png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/Healthy.Web.styles.css" asp-append-version="true"/>
+    <icon src="~/favicon.png"/>
 </head>
 
 <body>
-    <style>
-        :root {
-            --primary-color: #0054d1;
-            --secondary-color: #41b3a3;
-            --tertiary-color: #8bc34a;
-            --quaternary-color: #f5f5f5;
-            --light-color: #ffffff;
-            --dark-color: #333333;
-        }
-
-        body {
-            background-color: var(--quaternary-color);
-            font-family: 'Roboto', sans-serif;
-        }
-
-        h1,
-        h2,
-        h3,
-        h4,
-        h5,
-        h6 {
-            font-weight: bold;
-            margin-top: 0;
-        }
-
-        a {
-            color: var(--primary-color);
-            text-decoration: none;
-        }
-
-        a:hover {
-            color: var(--secondary-color);
-        }
-
-        .header {
-            background-color: var(--primary-color);
-            color: var(--light-color);
-            padding: 20px;
-        }
-
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-        }
-
-        .nav-link {
-            color: var(--light-color);
-            margin-left: 20px;
-            font-size: 1.2rem;
-        }
-
-        .nav-link:hover {
-            color: var(--secondary-color);
-        }
-
-        .btn-primary {
-            background-color: var(--secondary-color);
-            color: var(--light-color);
-            border: none;
-            font-size: 1.2rem;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease-in-out;
-        }
-
-        .btn-primary:hover {
-            background-color: #ffbf3f;
-        }
-
-        .card {
-            background-color: var(--light-color);
-            color: var(--dark-color);
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .card-title {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-        }
-
-        .card-text {
-            font-size: 1.2rem;
-            line-height: 1.5;
-            margin-bottom: 20px;
-        }
-
-        .footer {
-            background-color: var(--quaternary-color);
-            color: var(--light-color);
-            text-align: center;
-        }
-
-        .footer-text {
-            font-size: 1.2rem;
-        }
-    </style>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Healthy</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
+<header>
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <div class="container-fluid">
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Healthy</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
                     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link " asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link " asp-area="" asp-controller="Patient" asp-action="Index">Pacientes</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link " asp-area="" asp-controller="Doctor" asp-action="Index">Médicos</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link " asp-area="" asp-controller="Appointment"
-                                asp-action="Index">Consultas</a>
-                        </li>
-                    </ul>
-                </div>
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                <ul class="navbar-nav flex-grow-1">
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Patient" asp-action="Index">Pacientes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Doctor" asp-action="Index">Médicos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Appointment"
+                           asp-action="Index">
+                            Consultas
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Speciality" asp-action="Index">Especialidades</a>
+                    </li>
+                </ul>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; @DateTime.Now.Year - Healthy
         </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+    </nav>
+</header>
+<div class="container">
+    <main role="main" class="pb-3">
+        @RenderBody()
+    </main>
+</div>
+
+<footer class="border-top footer text-muted">
+    <div class="container">
+        &copy; @DateTime.Now.Year - Healthy
+    </div>
+</footer>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+@await RenderSectionAsync("Scripts", required: false)
 </body>
 
 </html>

@@ -5,10 +5,6 @@
     Layout = "_Layout";
 }
 
-<head>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
-</head>
-
 @if (Model is not null)
 {
     <h1>@Model.FullName</h1>
@@ -17,7 +13,7 @@
         <a asp-controller="Doctor" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Editar</a>
         <a asp-controller="Doctor" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Excluir</a>
     </div>
-    <hr />
+    <hr/>
 
     <div class="card mb-3">
         <div class="card-header bg-primary text-light">
@@ -45,7 +41,7 @@
                     <strong>E-mail:</strong>
                 </div>
                 <div class="col-sm-8">
-                    @Model.Email
+                    @Html.DisplayFor(model => model.Email)
                 </div>
             </div>
             <div class="row">
@@ -53,7 +49,7 @@
                     <strong>Telefone:</strong>
                 </div>
                 <div class="col-sm-8">
-                    @Model.Phone
+                    @Html.DisplayFor(model => model.Phone)
                 </div>
             </div>
             <div class="row">
@@ -61,17 +57,17 @@
                     <strong>Especialidades:</strong>
                 </div>
                 <div class="col-sm-8">
-                    <ul>
+                    <ul class="list-group">
                         @foreach (var specialty in Model.Specialities)
                         {
-                            <li>@specialty.Name</li>
+                            <li class="list-group-item">@specialty.Name</li>
                         }
                     </ul>
                 </div>
             </div>
         </div>
     </div>
-    <hr />
+    <hr/>
 
     <div class="card mb-3">
         <div class="card-header bg-primary text-light">
@@ -82,29 +78,31 @@
             {
                 <table class="table">
                     <thead>
-                        <tr>
-                            <th>Link</th>
-                            <th>Data</th>
-                            <th>Paciente</th>
-                            <th>Descrição</th>
-                            <th>Status</th>
-                        </tr>
+                    <tr>
+                        <th>Link</th>
+                        <th>Data</th>
+                        <th>Paciente</th>
+                        <th>Descrição</th>
+                        <th>Status</th>
+                    </tr>
                     </thead>
                     <tbody>
-                        @foreach (var appointment in Model.Appointments)
-                        {
-                            <tr>
-                                <td>
-                                    <a asp-controller="Appointment" asp-action="Details" asp-route-id="@appointment.Id"> <i
-                                            class="fa fa-eye" aria-hidden="true"></i></a>
-                                </td>
-                                <td>@appointment.Date.ToString("dd/MM/yyyy")</td>
-                                <td>@appointment.Patient.FullName</td>
-                                <td>@appointment.Description</td>
-                                <td> @Html.DisplayFor(model => appointment.Status)</td>
-                                @* TODO - Melhorar exibição do Status *@
-                            </tr>
-                        }
+                    @foreach (var appointment in Model.Appointments)
+                    {
+                        <tr>
+                            <td>
+                                <a asp-controller="Appointment" asp-action="Details" asp-route-id="@appointment.Id">
+                                    <i
+                                        class="fa fa-eye" aria-hidden="true">
+                                    </i>
+                                </a>
+                            </td>
+                            <td>@appointment.Date.ToString("dd/MM/yyyy")</td>
+                            <td>@appointment.Patient.FullName</td>
+                            <td>@appointment.Description</td>
+                            <td> @Html.DisplayFor(model => appointment.Status)</td>
+                        </tr>
+                    }
                     </tbody>
                 </table>
 
@@ -116,7 +114,7 @@
             }
         </div>
     </div>
-    <hr />
+    <hr/>
 }
 else
 {

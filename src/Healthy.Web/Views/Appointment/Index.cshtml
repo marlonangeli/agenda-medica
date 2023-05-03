@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Consultas";
+    Layout = "_Layout";
     int currentPage = ViewBag.CurrentPage;
     int totalPages = ViewBag.TotalPages;
 }
@@ -9,14 +10,14 @@
 <div class="container my-4">
     <div class="d-flex justify-content-between mb-3">
         <h1>Consultas</h1>
-    <a class="btn btn-primary btn-sm" asp-controller="Appointment" asp-action="Create">Nova Consulta</a>
-</div>
+        <a class="btn btn-primary btn-sm" asp-controller="Appointment" asp-action="Create">Nova Consulta</a>
+    </div>
 
-@if (Model.Any())
-{
-    <div class="table-responsive">
-        <table class="table table-striped">
-            <thead>
+    @if (Model.Any())
+    {
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
                 <tr>
                     <th>Id</th>
                     <th>Data</th>
@@ -27,42 +28,36 @@
                     <th>Criado em</th>
                     <th>Ações</th>
                 </tr>
-            </thead>
-            <tbody>
+                </thead>
+                <tbody>
                 @foreach (Appointment ap in Model)
                 {
                     <tr>
-                        <td>
-                            <a asp-controller="Appointment" asp-action="Details" asp-route-id="@ap.Id">@ap.Id</a>
-                        </td>
+                        <td>@ap.Id</td>
                         <td>@ap.Date</td>
                         <td>@ap.Description</td>
                         <td>@ap.Doctor.FullName</td>
                         <td>@ap.Patient.FullName</td>
                         <td>@Html.DisplayFor(modelItem => ap.Status)</td>
-                        <td>@ap.CreatedAt</td>
+                        <td>@Html.DisplayFor(modelItem => ap.CreatedAt)</td>
                         <td>
                             <a class="btn btn-sm btn-secondary" asp-controller="Appointment" asp-action="Details"
-                        asp-route-id="@ap.Id">Detalhes</a>
+                               asp-route-id="@ap.Id">
+                                Detalhes
+                            </a>
                         </td>
                     </tr>
                 }
-            </tbody>
-        </table>
+                </tbody>
+            </table>
 
-        @await Html.PartialAsync("_Pagination", (currentPage, totalPages, "Index"))
-    </div>
-}
-else
-{
-    <div class="text-center">
-        <h3>Nenhuma consulta encontrada</h3>
-    </div>
-}
-
-<style>
-    a.btn.btn-primary.btn-sm {
-        font-size: 1.0rem;
-        padding: 0.7rem 0.5rem;
+            @await Html.PartialAsync("_Pagination", (currentPage, totalPages, "Index"))
+        </div>
     }
-</style>
+    else
+    {
+        <div class="text-center">
+            <h3>Nenhuma consulta encontrada</h3>
+        </div>
+    }
+</div>

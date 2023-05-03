@@ -13,7 +13,7 @@
         <a asp-controller="Appointment" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Editar</a>
         <a asp-controller="Appointment" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Excluir</a>
     </div>
-    <hr />
+    <hr/>
 
     <div class="card mb-3">
         <div class="card-header bg-primary text-light">
@@ -25,7 +25,7 @@
                     <strong>Data da consulta:</strong>
                 </div>
                 <div class="col-sm-8">
-                    @Model.Date
+                    @Html.DisplayFor(model => model.Date)
                 </div>
             </div>
             <div class="row">
@@ -62,7 +62,7 @@
             </div>
         </div>
     </div>
-    <hr />
+    <hr/>
     <div class="row">
         <div class="col-md-6">
             <div class="card mb-3">
@@ -91,7 +91,7 @@
                             <strong>Data de Nascimento:</strong>
                         </div>
                         <div class="col-sm-8">
-                            @Model.Patient.BirthDate
+                            @Html.DisplayFor(model => model.Patient.BirthDate)
                         </div>
                     </div>
                     <div class="row">
@@ -99,7 +99,7 @@
                             <strong>E-mail:</strong>
                         </div>
                         <div class="col-sm-8">
-                            @Model.Patient.Email
+                            @Html.DisplayFor(model => model.Patient.Email)
                         </div>
                     </div>
                     <div class="row">
@@ -107,7 +107,7 @@
                             <strong>Telefone:</strong>
                         </div>
                         <div class="col-sm-8">
-                            @Model.Patient.Phone
+                            @Html.DisplayFor(model => model.Patient.Phone)
                         </div>
                     </div>
                 </div>
@@ -140,10 +140,10 @@
                             <strong>Especialidades:</strong>
                         </div>
                         <div class="col-sm-8">
-                            <ul>
+                            <ul class="list-group">
                                 @foreach (var specialty in Model.Doctor.Specialities)
                                 {
-                                    <li>@specialty.Name</li>
+                                    <li class="list-group-item">@specialty.Name</li>
                                 }
                             </ul>
                         </div>
@@ -153,7 +153,7 @@
                             <strong>E-mail:</strong>
                         </div>
                         <div class="col-sm-8">
-                            @Model.Doctor.Email
+                            @Html.DisplayFor(model => model.Doctor.Email)
                         </div>
                     </div>
                     <div class="row">
@@ -161,7 +161,7 @@
                             <strong>Telefone:</strong>
                         </div>
                         <div class="col-sm-8">
-                            @Model.Doctor.Phone
+                            @Html.DisplayFor(model => model.Doctor.Phone)
                         </div>
                     </div>
                 </div>
