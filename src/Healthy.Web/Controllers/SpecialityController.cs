@@ -26,14 +26,17 @@ public class SpecialityController : Controller
         return View(specialities);
     }
     
-    public async Task<IActionResult> Details(int id)
+    public async Task<IActionResult> Details(int id, string? modelError = null)
     {
-        // TODO - Implementar o IncludeAll
-        // var speciality = await _repository.GetByIdAsync(id, true);
         var speciality = await _repository.GetQueryable()
             .Include(i => i.Doctors)
             .FirstOrDefaultAsync(f => f.Id == id);
 
+        if (modelError is not null)
+        {
+            ModelState.AddModelError(string.Empty, modelError);
+        }
+        
         return View(speciality);
     }
     
@@ -53,14 +56,13 @@ public class SpecialityController : Controller
                 await _repository.AddAsync(speciality);
                 return RedirectToAction(nameof(Index));
             }
-
-            return View(speciality);
         }
         catch (Exception e)
         {
-            ModelState.AddModelError("", e.InnerException?.Message);
-            return View(speciality);
+            ModelState.AddModelError(string.Empty, e.Message);
         }
+        
+        return View(speciality);
     }
 
     public async Task<IActionResult> Edit(int id)
@@ -86,19 +88,25 @@ public class SpecialityController : Controller
                 await _repository.UpdateAsync(speciality);
                 return RedirectToAction(nameof(Index));
             }
-
-            return View(speciality);
         }
         catch (Exception e)
         {
-            ModelState.AddModelError("", e.Message);
-            return View(speciality);
+            ModelState.AddModelError(string.Empty, e.Message);
         }
+        
+        return View(speciality);
     }
 
     public async Task<IActionResult> Delete(int id)
     {
-        await _repository.DeleteAsync(id);
-        return RedirectToAction(nameof(Index));
+        try
+        {
+            await _repository.DeleteAsync(id);
+            return RedirectToAction(nameof(Index));
+        }
+        catch (Exception e)
+        {
+            return RedirectToAction(nameof(Details), new {id = id, modelError = e.Message});
+        }
     }
 }

@@ -31,30 +31,40 @@ public class DoctorController : Controller
         return View(doctors);
     }
 
-    public async Task<IActionResult> Details(int id)
+    public async Task<IActionResult> Details(int id, string? modelError = null)
     {
-        // TODO - Implementar o IncludeAll
-        // var doctor = await _repository.GetByIdAsync(id, true);
         var doctor = await _doctorRepository.GetQueryable()
             .Include(i => i.Appointments)
             .ThenInclude(i => i.Patient)
             .Include(i => i.Specialities)
             .FirstOrDefaultAsync(f => f.Id == id);
 
+        if (modelError is not null)
+        {
+            ModelState.AddModelError(string.Empty, modelError);
+        }
+
         return View(doctor);
     }
 
     public async Task<IActionResult> Delete(int id)
     {
-        await _doctorRepository.DeleteAsync(id);
-        return RedirectToAction(nameof(Index));
+        try
+        {
+            await _doctorRepository.DeleteAsync(id);
+            return RedirectToAction(nameof(Index));
+        }
+        catch (Exception e)
+        {
+            return RedirectToAction(nameof(Details), new { id, modelError = e.Message });
+        }
     }
 
     public async Task<IActionResult> Edit(int id)
     {
         var doctor = await _doctorRepository.GetByIdAsync(id);
         PopulateSpecialties();
-        
+
         var doctorViewModel = doctor.Map();
 
         return View(doctorViewModel);
@@ -70,17 +80,66 @@ public class DoctorController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(DoctorViewModel doctor)
     {
-        RemoveModelStateProperties();
-
-        if (ModelState.IsValid)
+        try
         {
-            var doctorEntity = doctor.Map();
-            await _doctorRepository.AddAsync(doctorEntity);
-            return RedirectToAction(nameof(Index));
+            RemoveModelStateProperties();
+
+            if (ModelState.IsValid)
+            {
+                var doctorEntity = doctor.Map();
+                var specialities = await _specialtyRepository.GetQueryable()
+                    .Where(w => doctorEntity.Specialities.Select(s => s.Id).Contains(w.Id))
+                    .ToListAsync();
+                
+                // Database error
+                doctorEntity.Specialities = specialities;
+                await _doctorRepository.AddAsync(doctorEntity);
+                return RedirectToAction(nameof(Index));
+            }
+        }
+        catch (Exception e)
+        {
+            ModelState?.AddModelError(string.Empty, e.Message);
+        }
+        finally
+        {
+            PopulateSpecialties();
         }
 
-        PopulateSpecialties();
-        
+        return View(doctor);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(DoctorViewModel doctor)
+    {
+        try
+        {
+            RemoveModelStateProperties();
+
+            if (ModelState.IsValid)
+            {
+                var doctorEntity = doctor.Map();
+                var specialities = await _specialtyRepository.GetQueryable()
+                    .Where(w => doctorEntity.Specialities.Select(s => s.Id).Contains(w.Id))
+                    .ToListAsync();
+                
+                // TODO: Unique constraint error
+                // Database error
+                doctorEntity.Specialities = specialities;
+                await _doctorRepository.UpdateAsync(doctorEntity);
+                return RedirectToAction(nameof(Index));
+            }
+        }
+        catch (Exception e)
+        {
+            ModelState?.AddModelError(string.Empty, e.Message);
+        }
+        finally
+        {
+            PopulateSpecialties();
+        }
+
         return View(doctor);
     }
 

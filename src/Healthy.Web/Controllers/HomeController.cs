@@ -11,17 +11,17 @@ namespace Healthy.Web.Controllers;
 public class HomeController : Controller
 {
     private readonly IBaseRepository<Appointment> _repository;
-    private readonly ILogger<HomeController> _logger;
 
-    public HomeController(ILogger<HomeController> logger, IBaseRepository<Appointment> repository)
+    public HomeController(IBaseRepository<Appointment> repository)
     {
-        _logger = logger;
         _repository = repository;
     }
 
     public async Task<IActionResult> Index(int page = 1)
     {
-        var query = _repository.GetQueryable().Include(i => i.Patient).Include(i => i.Doctor);
+        var query = _repository.GetQueryable()
+            .Include(i => i.Patient)
+            .Include(i => i.Doctor);
         var appointments = await query
             .Skip((page - 1) * ViewConstants.PageSize)
             .Take(ViewConstants.PageSize)

@@ -1,7 +1,9 @@
-﻿using System.Linq.Expressions;
+﻿using System.Data;
+using System.Linq.Expressions;
 using Healthy.Data.Context;
 using Healthy.Domain.Entities;
 using Healthy.Domain.Interfaces;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
 namespace Healthy.Data.Repositories;
@@ -95,27 +97,84 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class, IEntity
 
     public virtual async Task<T> AddAsync(T entity)
     {
-        await _context.Set<T>().AddAsync(entity);
-        await _context.SaveChangesAsync();
-        return entity;
+        try
+        {
+            await _context.Set<T>().AddAsync(entity);
+            await _context.SaveChangesAsync();
+            return entity;
+        }
+        catch (DbUpdateException e)
+        {
+            if (e.InnerException is SqliteException sqliteException)
+            {
+                switch (sqliteException)
+                {
+                    case { SqliteExtendedErrorCode: 2067 }:
+                        throw new ConstraintException(
+                            "Não é possível inserir o registro pois há conflito de chave única");
+                    default:
+                        throw;
+                }
+            }
+
+            throw;
+        }
     }
 
     public virtual async Task<T> UpdateAsync(T entity)
     {
-        _context.Set<T>().Update(entity);
-        await _context.SaveChangesAsync();
-        return entity;
+        try
+        {
+            _context.Set<T>().Update(entity);
+            await _context.SaveChangesAsync();
+            return entity;
+        }
+        catch (DbUpdateException e)
+        {
+            if (e.InnerException is SqliteException sqliteException)
+            {
+                switch (sqliteException)
+                {
+                    case { SqliteExtendedErrorCode: 2067 }:
+                        throw new ConstraintException(
+                            "Não é possível atualizar o registro pois há conflito de chave única");
+                    default:
+                        throw;
+                }
+            }
+
+            throw;
+        }
     }
 
     public virtual async Task<T> DeleteAsync(int id)
     {
-        var entity = await GetByIdAsync(id);
-        if (entity == null)
-            throw new ArgumentException("Entity not found");
+        try
+        {
+            var entity = await GetByIdAsync(id);
+            if (entity == null)
+                throw new ArgumentException("Entity not found");
 
-        _context.Set<T>().Remove(entity);
-        await _context.SaveChangesAsync();
-        return entity;
+            _context.Set<T>().Remove(entity);
+            await _context.SaveChangesAsync();
+            return entity;
+        }
+        catch (DbUpdateException e)
+        {
+            if (e.InnerException is SqliteException sqliteException)
+            {
+                switch (sqliteException)
+                {
+                    case { SqliteExtendedErrorCode: 1811 }:
+                        throw new ConstraintException(
+                            "Não é possível excluir o registro pois há conflito em outros registros");
+                    default:
+                        throw;
+                }
+            }
+
+            throw;
+        }
     }
 
     private static void IncludeAll(ref IQueryable<T> query)

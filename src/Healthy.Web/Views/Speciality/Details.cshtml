@@ -12,6 +12,8 @@
         <a asp-controller="Speciality" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Excluir</a>
     </div>
     <hr/>
+    
+    @Html.ValidationSummary("", new { @class = "text-danger" })
 
     <table class="table">
         <tr>
