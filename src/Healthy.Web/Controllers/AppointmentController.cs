@@ -1,4 +1,5 @@
-﻿using Healthy.Domain.Entities;
+﻿using System.Data;
+using Healthy.Domain.Entities;
 using Healthy.Domain.Enums;
 using Healthy.Domain.Interfaces;
 using Healthy.Web.Constants;
@@ -14,21 +15,27 @@ public class AppointmentController : Controller
     private readonly IBaseRepository<Patient> _patientRepository;
     private readonly IBaseRepository<Doctor> _doctorRepository;
 
-    public AppointmentController(IBaseRepository<Appointment> appointmentRepository, IBaseRepository<Patient> patientRepository, IBaseRepository<Doctor> doctorRepository)
+    public AppointmentController(IBaseRepository<Appointment> appointmentRepository,
+        IBaseRepository<Patient> patientRepository, IBaseRepository<Doctor> doctorRepository)
     {
         _appointmentRepository = appointmentRepository;
         _patientRepository = patientRepository;
         _doctorRepository = doctorRepository;
     }
 
-    public async Task<IActionResult> Details(int id)
+    public async Task<IActionResult> Details(int id, string? modelError = null)
     {
         var appointment = await _appointmentRepository.GetQueryable()
             .Include(i => i.Patient)
             .Include(i => i.Doctor)
             .ThenInclude(d => d.Specialities)
             .FirstOrDefaultAsync(f => f.Id == id);
-        
+
+        if (modelError is not null)
+        {
+            ModelState.AddModelError(string.Empty, modelError);
+        }
+
         return View(appointment);
     }
 
@@ -54,32 +61,41 @@ public class AppointmentController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(Appointment appointment)
     {
-        RemoveModelStateProperties();
-        
-        if (ModelState.IsValid)
+        try
         {
-            var entity = await _appointmentRepository.AddAsync(appointment);
-            return RedirectToAction(nameof(Details), new { id = entity.Id });
+            RemoveModelStateProperties();
+
+            if (ModelState.IsValid)
+            {
+                var entity = await _appointmentRepository.AddAsync(appointment);
+                return RedirectToAction(nameof(Details), new { id = entity.Id });
+            }
         }
-        
-        PopulateDropDownLists();
-        
+        catch (Exception e)
+        {
+            ModelState?.AddModelError(string.Empty, e.Message);
+        }
+        finally
+        {
+            PopulateDropDownLists();
+        }
+
         return View(appointment);
     }
 
     public async Task<IActionResult> Edit(int id)
     {
         var appointment = await _appointmentRepository.GetByIdAsync(id, true);
-        
+
         var (patients, _) = await _patientRepository.GetAllAsync(1);
         var (doctors, _) = await _doctorRepository.GetAllAsync(1);
 
         var selectListPatients = new SelectList(patients, nameof(Patient.Id), nameof(Patient.FullName));
         var selectListDoctors = new SelectList(doctors, nameof(Doctor.Id), nameof(Doctor.FullName));
-        
+
         ViewBag.Patients = selectListPatients;
         ViewBag.Doctors = selectListDoctors;
-        
+
         return View(appointment);
     }
 
@@ -87,30 +103,46 @@ public class AppointmentController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(int id, Appointment appointment)
     {
-        RemoveModelStateProperties();
-
-        if (id != appointment.Id)
+        try
         {
-            return NotFound();
-        }
+            RemoveModelStateProperties();
 
-        if (ModelState.IsValid)
-        {
-            await _appointmentRepository.UpdateAsync(appointment);
-            return RedirectToAction(nameof(Index));
+            if (id != appointment.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                await _appointmentRepository.UpdateAsync(appointment);
+                return RedirectToAction(nameof(Index));
+            }
         }
-        
-        PopulateDropDownLists();
+        catch (Exception e)
+        {
+            ModelState?.AddModelError(string.Empty, e.Message);
+        }
+        finally
+        {
+            PopulateDropDownLists();
+        }
 
         return View(appointment);
     }
 
     public async Task<IActionResult> Delete(int id)
     {
-        await _appointmentRepository.DeleteAsync(id);
-        return RedirectToAction(nameof(Index));
+        try
+        {
+            await _appointmentRepository.DeleteAsync(id);
+            return RedirectToAction(nameof(Index));
+        }
+        catch (Exception e)
+        {
+            return RedirectToAction(nameof(Details), new { id = id, modelError = e.Message });
+        }
     }
-    
+
     private async void PopulateDropDownLists()
     {
         var (patients, _) = await _patientRepository.GetAllAsync(1);
@@ -118,48 +150,48 @@ public class AppointmentController : Controller
 
         var selectListPatients = new SelectList(patients, nameof(Patient.Id), nameof(Patient.FullName));
         var selectListDoctors = new SelectList(doctors, nameof(Doctor.Id), nameof(Doctor.FullName));
-        
+
         ViewBag.Patients = selectListPatients;
         ViewBag.Doctors = selectListDoctors;
     }
-    
+
     private void RemoveModelStateProperties()
     {
         ModelState.Remove(nameof(Appointment.Patient));
         ModelState.Remove(nameof(Appointment.Doctor));
     }
 
-    
-    public async Task<JsonResult> getCalendarData()
+    public async Task<JsonResult> GetCalendarData()
     {
-        var query = _appointmentRepository.GetQueryable().Include(i => i.Patient).Include(i => i.Doctor);
-        var total = await query.CountAsync();
+        var query = _appointmentRepository
+            .GetQueryable()
+            .AsNoTracking()
+            .Include(i => i.Patient)
+            .Include(i => i.Doctor);
+
         var appointments = await query
-            .Skip((1 - 1) * ViewConstants.PageSize)
-            .Take(ViewConstants.PageSize)
             .ToListAsync();
         var events = new List<object>();
 
         foreach (var appointment in appointments)
         {
-            if (appointment != null)
-            {
-                events.Add(
-                    new
+            events.Add(
+                new
+                {
+                    title = $"Consulta {appointment.Id} - {appointment.Patient.FirstName}",
+                    start = appointment.Date.ToString("yyyy-MM-ddTHH:mm:ss"),
+                    end = appointment.Date.AddMinutes(30).ToString("yyyy-MM-ddTHH:mm:ss"),
+                    url = $"/Appointment/Details/{appointment.Id}",
+                    backgroundColor = appointment.Status switch
                     {
-                        title = $"Consulta {appointment.Id} - {appointment.Patient.FirstName}",
-                        start = appointment.Date.ToString("yyyy-MM-ddTHH:mm:ss"),
-                        end = appointment.Date.AddMinutes(30).ToString("yyyy-MM-ddTHH:mm:ss"),
-                        url = $"/Appointment/Details/{appointment.Id}",
-                        backgroundColor = appointment.Status switch
-                        {
-                            AppointmentStatus.Canceled => "#f44336",
-                            AppointmentStatus.Completed => "#4caf50",
-                            _ => "#2196f3"
-                        }
+                        AppointmentStatus.Canceled => "#f44336",
+                        AppointmentStatus.Completed => "#4caf50",
+                        AppointmentStatus.Scheduled => "#ff9800",
+                        AppointmentStatus.Confirmed => "#2196f3",
+                        _ => "#2196f3"
                     }
-                );
-            }
+                }
+            );
         }
 
         return Json(events);
