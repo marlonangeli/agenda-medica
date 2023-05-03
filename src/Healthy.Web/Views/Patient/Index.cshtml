@@ -2,55 +2,61 @@
 
 @{
     ViewData["Title"] = "Paciente";
+    Layout = "_Layout";
     int currentPage = ViewBag.CurrentPage;
     int totalPages = ViewBag.TotalPages;
 }
 
-<h1>Pacientes</h1>
-
-<div class="flex justify-content-end">
-    <a class="btn btn-primary" asp-controller="Patient" asp-action="Create">Novo Paciente</a>
-</div>
-
-@if (Model.Any())
-{
-    <div class="align-content-center">
-        <table class="table">
-            <thead>
-            <tr>
-                <th>Id</th>
-                <th>Nome</th>
-                <th>CPF</th>
-                <th>Telefone</th>
-                <th>E-mail</th>
-                <th>Idade</th>
-                <th>Data de Nascimento</th>
-            </tr>
-            </thead>
-            <tbody>
-            @foreach (Patient patient in Model)
-            {
+<div class="container my-4">
+    <div class="d-flex justify-content-between mb-3">
+        <h1>Pacientes</h1>
+        <a class="btn btn-primary btn-sm" asp-controller="Patient" asp-action="Create">Novo Paciente</a>
+    </div>
+    @if (Model.Any())
+    {
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
                 <tr>
-                    <td>@patient.Id</td>
-                    <td>
-                        <a asp-controller="Patient" asp-action="Details" asp-route-id="@patient.Id">@patient.FullName</a>
-                    </td>
-                    <td>@patient.CPF</td>
-                    <td>@patient.Phone</td>
-                    <td>@patient.Email</td>
-                    <td>@patient.Age</td>
-                    <td>@patient.BirthDate.ToString("dd/MM/yyyy")</td>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>CPF</th>
+                    <th>Telefone</th>
+                    <th>E-mail</th>
+                    <th>Idade</th>
+                    <th>Data de Nascimento</th>
+                    <th>Ações</th>
                 </tr>
-            }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                @foreach (var patient in Model)
+                {
+                    <tr>
+                        <td>@patient.Id</td>
+                        <td>@patient.FullName</td>
+                        <td>@patient.CPF</td>
+                        <td>@patient.Phone</td>
+                        <td>@patient.Email</td>
+                        <td>@patient.Age</td>
+                        <td>@patient.BirthDate.ToString("dd/MM/yyyy")</td>
+                        <td>
+                            <a class="btn btn-sm btn-secondary" asp-controller="Patient" asp-action="Details"
+                               asp-route-id="@patient.Id">
+                                Detalhes
+                            </a>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
 
         @await Html.PartialAsync("_Pagination", (currentPage, totalPages, "Index"))
-    </div>
-}
-else
-{
-    <div class="text-center">
-        <h3>Nenhum paciente encontrado</h3>
-    </div>
-}
+    }
+    else
+    {
+        <div class="text-center">
+            <h3>Nenhum paciente encontrado</h3>
+        </div>
+    }
+</div>

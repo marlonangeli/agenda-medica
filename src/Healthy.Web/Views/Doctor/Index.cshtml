@@ -2,46 +2,50 @@
 
 @{
     ViewData["Title"] = "Médicos";
+    Layout = "_Layout";
     int currentPage = ViewBag.CurrentPage;
     int totalPages = ViewBag.TotalPages;
 }
 
-<h1>Doutor</h1>
-
-<div class="flex justify-content-end">
-    <a class="btn btn-primary" asp-controller="Doctor" asp-action="Create">Novo Médico</a>
+<div class="container my-4">
+    <div class="d-flex justify-content-between mb-3">
+        <h1>Médicos</h1>
+        <a class="btn btn-primary btn-sm" asp-controller="Doctor" asp-action="Create">Novo Médico</a>
+    </div>
 </div>
-
 @if (Model.Any())
 {
-    <div class="align-content-center">
-        <table class="table">
+    <div class="table-responsive">
+        <table class="table table-striped">
             <thead>
-            <tr>
-                <th>Id</th>
-                <th>Nome</th>
-                <th>CPF</th>
-                <th>Telefone</th>
-                <th>E-mail</th>
-                <th>Idade</th>
-                <th>Data de Nascimento</th>
-            </tr>
+                <tr>
+                    <th>Id</th>
+                    <th>Nome</th>
+                    <th>CPF</th>
+                    <th>Telefone</th>
+                    <th>E-mail</th>
+                    <th>Idade</th>
+                    <th>Data de Nascimento</th>
+                    <th>Ações</th>
+                </tr>
             </thead>
             <tbody>
-            @foreach (Doctor doctor in Model)
-            {
-                <tr>
-                    <td>@doctor.Id</td>
-                    <td>
-                        <a asp-controller="Doctor" asp-action="Details" asp-route-id="@doctor.Id">@doctor.FullName</a>
-                    </td>
-                    <td>@doctor.CRM</td>
-                    <td>@doctor.Phone</td>
-                    <td>@doctor.Email</td>
-                    <td>@doctor.Age</td>
-                    <td>@doctor.BirthDate.ToString("dd/MM/yyyy")</td>
-                </tr>
-            }
+                @foreach (Doctor doctor in Model)
+                {
+                    <tr>
+                        <td>@doctor.Id</td>
+                        <td>@doctor.FullName</td>
+                        <td>@doctor.CRM</td>
+                        <td>@doctor.Phone</td>
+                        <td>@doctor.Email</td>
+                        <td>@doctor.Age</td>
+                        <td>@doctor.BirthDate.ToString("dd/MM/yyyy")</td>
+                        <td>
+                            <a class="btn btn-sm btn-secondary" asp-controller="Doctor" asp-action="Details"
+                        asp-route-id="@doctor.Id">Detalhes</a>
+                        </td>
+                    </tr>
+                }
             </tbody>
         </table>
 

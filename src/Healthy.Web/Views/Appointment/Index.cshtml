@@ -2,55 +2,62 @@
 
 @{
     ViewData["Title"] = "Consultas";
+    Layout = "_Layout";
     int currentPage = ViewBag.CurrentPage;
     int totalPages = ViewBag.TotalPages;
 }
 
-<h1>Consultas</h1>
+<div class="container my-4">
+    <div class="d-flex justify-content-between mb-3">
+        <h1>Consultas</h1>
+        <a class="btn btn-primary btn-sm" asp-controller="Appointment" asp-action="Create">Nova Consulta</a>
+    </div>
 
-<div class="flex justify-content-end">
-    <a class="btn btn-primary" asp-controller="Appointment" asp-action="Create">Nova Consulta</a>
-</div>
-
-@if (Model.Any())
-{
-    <div class="align-content-center">
-        <table class="table">
-            <thead>
-            <tr>
-                <th>Id</th>
-                <th>Data</th>
-                <th>Descrição</th>
-                <th>Médico</th>
-                <th>Paciente</th>
-                <th>Status</th>
-                <th>Criado em</th>
-            </tr>
-            </thead>
-            <tbody>
-            @foreach (Appointment ap in Model)
-            {
+    @if (Model.Any())
+    {
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
                 <tr>
-                    <td>
-                        <a asp-controller="Appointment" asp-action="Details" asp-route-id="@ap.Id">@ap.Id</a>
-                    </td>
-                    <td>@ap.Date</td>
-                    <td>@ap.Description</td>
-                    <td>@ap.Doctor.FullName</td>
-                    <td>@ap.Patient.FullName</td>
-                    <td>@ap.Status</td>
-                    <td>@ap.CreatedAt</td>
+                    <th>Id</th>
+                    <th>Data</th>
+                    <th>Descrição</th>
+                    <th>Médico</th>
+                    <th>Paciente</th>
+                    <th>Status</th>
+                    <th>Criado em</th>
+                    <th>Ações</th>
                 </tr>
-            }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                @foreach (Appointment ap in Model)
+                {
+                    <tr>
+                        <td>@ap.Id</td>
+                        <td>@ap.Date</td>
+                        <td>@ap.Description</td>
+                        <td>@ap.Doctor.FullName</td>
+                        <td>@ap.Patient.FullName</td>
+                        <td>@Html.DisplayFor(modelItem => ap.Status)</td>
+                        <td>@Html.DisplayFor(modelItem => ap.CreatedAt)</td>
+                        <td>
+                            <a class="btn btn-sm btn-secondary" asp-controller="Appointment" asp-action="Details"
+                               asp-route-id="@ap.Id">
+                                Detalhes
+                            </a>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
 
-        @await Html.PartialAsync("_Pagination", (currentPage, totalPages, "Index"))
-    </div>
-}
-else
-{
-    <div class="text-center">
-        <h3>Nenhuma consulta encontrada</h3>
-    </div>
-}
+            @await Html.PartialAsync("_Pagination", (currentPage, totalPages, "Index"))
+        </div>
+    }
+    else
+    {
+        <div class="text-center">
+            <h3>Nenhuma consulta encontrada</h3>
+        </div>
+    }
+</div>
