@@ -34,7 +34,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.CPF, new { @class = "control-label col-md-3" })
             <div class="col-md-9">
-                @Html.TextBoxFor(model => model.CPF, new { @class = "form-control cpf", @placeholder = "CPF", @data_mask = "999.999.999-99", @data_val = "true", @data_val_validationcpf = "CPF inválido" })
+                @Html.TextBoxFor(model => model.CPF, new { @class = "form-control cpf", @placeholder = "CPF", data_mask = "999.999.999-99", @data_val = "true", @data_val_validationcpf = "CPF inválido" })
                 @Html.ValidationMessageFor(model => model.CPF, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -72,5 +72,3 @@
 </div>
 
 @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
-
-@* TODO - Máscara CPF, e-mail e telefone *@
